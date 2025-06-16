@@ -173,6 +173,7 @@ public class TaskController {
 		//redirect先に値を渡す
 		redirectAttributes.addFlashAttribute("completeMessage", completeMessage);
 		
+		
 		return "redirect:/task/complete";
 	}
 	

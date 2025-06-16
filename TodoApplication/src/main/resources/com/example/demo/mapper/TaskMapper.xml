@@ -20,6 +20,7 @@
            ELSE 0
     	 END AS message
         FROM task
+	WHERE deleteFlg = 0;
         ]]>;
     </select>
     
@@ -37,9 +38,9 @@
 	</select>
 	
 	   <!-- タスクの削除 -->
-   <delete id ="delete">
+   <update id ="delete">
 	UPDATE task SET deleteflg = 1 WHERE taskId = #{taskId};
-   </delete>
+   </update>
    
       <!-- タスクの更新 -->
    <update id="update" parameterType="com.example.demo.entity.Task">

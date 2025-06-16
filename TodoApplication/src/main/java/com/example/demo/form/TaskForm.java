@@ -18,6 +18,11 @@ public class TaskForm {
 	@Size(min = 1, max = 100)
     private String title;
 	
+	// メッセージは0から2の範囲
+	@Min(value = 0)
+	@Max(value = 2)
+	private int message;
+	
 	// 説明は最大200文字
 	@Size(max = 200)
     private String description;
@@ -38,6 +43,9 @@ public class TaskForm {
 	@Max(value=100)
 	private int progress;
 	
+//エラー定義作成予定
+	private int priority;
+	
 //	作業中の時の条件
 	@AssertTrue(message="status:未着手は0、完了は100、作業中は:0、100以外")
 	public boolean isProgressdValid() {
@@ -46,19 +54,8 @@ public class TaskForm {
 		else if(status == 2 && progress ==  0 || status == 2 && progress == 100) return false;//statusが作業中の時
 		return true;
 	}
+	
 
-	public int getProgress() {
-		return progress;
-	}
-
-	public void setProgress(int progress) {
-		this.progress = progress;
-	}
-
-	// メッセージは0から2の範囲
-	@Min(value = 0)
-	@Max(value = 2)
-	private int message;
 	
 	// 更新日時
 	private LocalDateTime updatedAt;
@@ -87,6 +84,13 @@ public class TaskForm {
 		this.description = description;
 	}
 	
+	public LocalDateTime getDeadline() {
+		return deadline;
+	}
+	
+	public void setDeadline(LocalDateTime deadline) {
+		this.deadline = deadline;
+	}
 	public int getStatus() {
 		return status;
 	}
@@ -95,14 +99,22 @@ public class TaskForm {
 		this.status = status;
 	}
 	
-	public LocalDateTime getDeadline() {
-		return deadline;
+	public int getProgress() {
+		return progress;
 	}
 	
-	public void setDeadline(LocalDateTime deadline) {
-		this.deadline = deadline;
+	public void setProgress(int progress) {
+		this.progress = progress;
 	}
 	
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
 	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}

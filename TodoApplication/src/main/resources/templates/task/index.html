@@ -35,6 +35,7 @@
                     <th scope="col">deadline</th>
                     <th scope="col">status</th>
 					<th scope="col">progress</th>
+					<th scope="col">priority</th>
                     <th scope="col">button</th>
                     <th scope="col">button</th>
                   </tr>
@@ -49,6 +50,13 @@
                     <td th:text="${#temporals.format(taskList.deadline, 'yyyy/MM/dd HH:mm')}">Formatted Deadline</td>
                     <td th:text="*{status == 1 ? '未着手' : status == 2 ? '作業中' : '完了'}">Status</td>
 					<td th:inline="text">[[*{progress}]]%</td>
+<!--					数値によって表示する値と色を変える-->
+					<td th:block th:switch="*{priority}">
+						<span th:case="4" th:text="最優先" style="color:#FF7F50"></span>
+						<span th:case="3" th:text="高" style="color:#ED7D31"></span>
+						<span th:case="2" th:text="中" style="color:#767171"></span>
+						<span th:case="1" th:text="低" style="color:#767171"></span>
+					</th:block></td>
                     <td><a class="btn btn-primary" th:href="@{/task/edit(taskId=${taskList.taskId})}">edit</a></td>
                     <td><a class="btn btn-primary" th:href="@{/task/delete(taskId=${taskList.taskId})}">delete</a></td>
                   </tr>

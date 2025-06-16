@@ -14,22 +14,24 @@
 	   deadline,
 	   status,
 	   progress,
+           priority,
 	   CASE
              WHEN CURRENT_TIMESTAMP > deadline and status <> 3 THEN 1
              WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' > deadline and status <> 3 THEN 2
            ELSE 0
     	 END AS message
         FROM task
-	WHERE deleteFlg = 0;
+	WHERE deleteFlg = 0
+	ORDER BY priority DESC,deadline;
         ]]>;
     </select>
     
     <!-- 新規タスクの登録 -->
     <insert id="save">
         INSERT INTO task
-            (title, description, deadline, status, progress, created_at,updated_at, deleteFlg)
+            (title, description, deadline, status, progress, priority, created_at,updated_at, deleteFlg)
         VALUES
-            (#{title}, #{description}, #{deadline}, 1, 0, CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,0);
+            (#{title}, #{description}, #{deadline}, 1, 0, #{priority},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,0);
     </insert>
     
         <!-- タスクIDを指定してタスクを取得 -->
@@ -44,7 +46,7 @@
    
       <!-- タスクの更新 -->
    <update id="update" parameterType="com.example.demo.entity.Task">
-	   UPDATE task SET title = #{title}, description = #{description},deadline = #{deadline},status = #{status}, progress = #{progress}, updated_at = CURRENT_TIMESTAMP WHERE taskId = #{taskId} and updated_at = #{updatedAt}; 
+	   UPDATE task SET title = #{title}, description = #{description},deadline = #{deadline},status = #{status}, progress = #{progress}, priority = #{priority}, updated_at = CURRENT_TIMESTAMP WHERE taskId = #{taskId} and updated_at = #{updatedAt}; 
    </update>
     
 </mapper>

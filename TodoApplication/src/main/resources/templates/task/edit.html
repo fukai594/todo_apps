@@ -44,13 +44,23 @@
 				<div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger"></div>
             </div>
 			<div class="form-group mb-3" th:if="${taskForm.taskId} !=0">
-	               <label>Progress</label>
-	               <input type="number" step="10" min="0" max="100" class="form-control" name="progress" th:value="*{progress}" style="width: 10%">
-	               <div th:if="${#fields.hasErrors('progress')}" th:errors="*{progress}" class="text-danger"></div>
+               <label>Progress</label>
+               <input type="number" step="10" min="0" max="100" class="form-control" name="progress" th:value="*{progress}" style="width: 10%">
+               <div th:if="${#fields.hasErrors('progress')}" th:errors="*{progress}" class="text-danger"></div>
 			</div>
 			<div>
 				<p th:if="${#fields.hasErrors('progressdValid')}" th:errors="*{progressdValid}" class="text-danger"></p>
 			</div>
+			<div>
+				<label>Priority</label>
+				<select name="priority">
+					<option value="4" th:selected="*{priority == 4}">最優先</option>
+					<option value="3" th:selected="*{priority == 3}">高</option>
+					<option value="2" th:selected="*{priority == 2}">中</option>
+					<option value="1" th:selected="*{priority == 1}">低</option>
+				</select>
+			</div>
+			<br/>
             <input type="hidden" name="taskId" th:value="*{taskId}">
             <input type="hidden" name="updatedAt" th:value="*{updatedAt}">
             

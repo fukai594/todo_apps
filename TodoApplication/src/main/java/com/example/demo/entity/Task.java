@@ -34,14 +34,9 @@ public class Task {
     
 //    進捗率(0-100)
     private int progress;
-
-    public int getProgress() {
-		return progress;
-	}
-
-	public void setProgress(int progress) {
-		this.progress = progress;
-	}
+    
+//    優先度(1-4)
+    private int priority;
 
 	/**
      * ユーザーID（タスクを所有するユーザーの識別子）。
@@ -110,6 +105,22 @@ public class Task {
         this.status = status;
     }
 
+    public int getProgress() {
+		return progress;
+	}
+
+	public void setProgress(int progress) {
+		this.progress = progress;
+	}
+	
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+	
     public Integer getUserId() {
         return userId;
     }
@@ -149,4 +160,6 @@ public class Task {
 	public void setMessage(int message) {
 		this.message = message;
 	}
+
+	
 }

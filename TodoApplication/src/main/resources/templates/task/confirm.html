@@ -35,11 +35,14 @@
                 <label>Status</label>
                 <p th:text="${taskForm.status == 1 ? '未着手' : taskForm.status == 2 ? '作業中' : '完了'}">Status</p>
             </div>
+			<div class="mb-3">
+				<label>Priority</label>
+				<p th:text="${taskForm.priority == 4 ? '最優先' : taskForm.priority == 3 ? '高' : taskForm.priority == 2 ? '中' : '低'}">priority</p>
+			</div>
 			<div class="mb-3" th:if="${taskForm.taskId} !=0">
                 <label>Progress</label>
-				<p th:inline="text">[[${taskForm.progress}]]%</p> 
-			 </div>
-        </div>
+				<p th:inline="text">[[${taskForm.progress}]]%</p>
+	       	</div>
         
 		<div class="d-flex justify-content-start">
         	<form th:action="@{/task/save}" method="post" th:object="${taskForm}"class="mb-3">
@@ -49,6 +52,7 @@
                <input type="hidden" name="taskId" th:field="*{taskId}">
                <input type="hidden" name="status" th:field="*{status}">
 			   <input type="hidden" name="progress" th:field="*{progress}">
+			   <input type="hidden" name="priority" th:field="*{priority}">
                <input type="hidden" name="updatedAt" th:value="*{updatedAt}">
                <!-- 送信ボタン -->
                <button type="submit" class="btn btn-primary me-2" value="submit">submit</button>
@@ -60,6 +64,7 @@
 	   			<input type="hidden" name="taskId" th:field="*{taskId}">
 	   			<input type="hidden" name="status" th:field="*{status}">
 				<input type="hidden" name="progress" th:field="*{progress}">
+				<input type="hidden" name="priority" th:field="*{priority}">
 	   			<input type="hidden" name="updatedAt" th:value="*{updatedAt}">
 	   			<button type="submit" class="btn btn-outline-secondary">back</button>
 	    	</form>

@@ -57,5 +57,7 @@ public interface TaskService {
      * @return タスクのフォームデータ
      */
     TaskForm convertToTaskForm(Task task);
+    
+    List<Task> filterTask(boolean checkStatus);
 
 }

@@ -110,7 +110,9 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	
+	public List<Task> filterTask(boolean checkStatus){
+		return taskRepository.filterTask(checkStatus);
+	}
 	
 	/**
 	 * タスクフォームをタスクエンティティに変換するメソッドです。

@@ -184,4 +184,14 @@ public class TaskController {
 	    	return "task/edit";
 	    }
 	
+//	 フィルター機能	
+	 @GetMapping(value = "/task/filter")
+		public String showFilter(@RequestParam("checkStatus") boolean checkStatus, Model model) {
+			
+		    // タスクIDに基づいてタスクを取得
+		 	List<Task> taskList = taskService.filterTask(checkStatus);
+					
+			model.addAttribute("taskList", taskList);
+			return "task/index";
+		}
 }

@@ -49,4 +49,7 @@ public interface TaskMapper {
      * @return 削除された行数
      */
     int delete(int taskId);
+    
+    List<Task> filterTask(boolean checkStatus);
+    
 }

@@ -73,4 +73,8 @@ public class TaskRepository {
         return taskMapper.delete(taskId);
     }
 
+    public List<Task> filterTask(boolean checkStatus){
+    	return taskMapper.filterTask(checkStatus);
+    }
+    
 }

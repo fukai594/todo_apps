@@ -49,4 +49,29 @@
 	   UPDATE task SET title = #{title}, description = #{description},deadline = #{deadline},status = #{status}, progress = #{progress}, priority = #{priority}, updated_at = CURRENT_TIMESTAMP WHERE taskId = #{taskId} and updated_at = #{updatedAt}; 
    </update>
     
+<!-- タスクの更新 -->
+<select id="filterTask>
+	<select id="findAll" resultType="com.example.demo.entity.Task">
+        <![CDATA[
+	SELECT
+           taskid,
+	   title,
+	   description,
+	   deadline,
+	   status,
+	   progress,
+           priority,
+	   CASE
+             WHEN CURRENT_TIMESTAMP > deadline and status <> 3 THEN 1
+             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' > deadline and status <> 3 THEN 2
+           ELSE 0
+    	 END AS message
+        FROM task
+	WHERE deleteFlg = 0
+	ORDER BY priority DESC,deadline;
+        ]]>;
+    </select>
+
+</select>
+
 </mapper>

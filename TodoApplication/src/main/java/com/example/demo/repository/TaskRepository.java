@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
 import com.example.demo.mapper.TaskMapper;
 
@@ -73,4 +74,8 @@ public class TaskRepository {
         return taskMapper.delete(taskId);
     }
 
+    public List<Task> filterTask(Check check){
+    	return taskMapper.filterTask(check);
+    }
+    
 }

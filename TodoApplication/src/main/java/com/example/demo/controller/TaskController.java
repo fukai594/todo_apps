@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.Task;
+import com.example.demo.form.CheckForm;
 import com.example.demo.form.TaskForm;
 import com.example.demo.service.TaskService;
 
@@ -42,6 +43,9 @@ public class TaskController {
 	public String showTask(Model model) {
 		
 		//タスクの一覧を取得
+	 	CheckForm checkForm = new CheckForm();
+	 	model.addAttribute("checkForm", checkForm);
+	 	
 		List<Task> taskList = taskService.findAll();		
 		model.addAttribute("taskList", taskList);
 		
@@ -184,4 +188,18 @@ public class TaskController {
 	    	return "task/edit";
 	    }
 	
+//	 フィルター機能	
+	 @GetMapping(value = "/task/filter")
+		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, Model model) {
+			
+		 	if (bindingResult.hasErrors()) {
+				return "task/index";
+		 	}
+		 	List<Task> taskList = taskService.filterTask(checkForm);
+
+		 	model.addAttribute("taskList", taskList);
+			
+			return "task/index";
+		}
+
 }

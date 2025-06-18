@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.common.Constants;
+import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
+import com.example.demo.form.CheckForm;
 import com.example.demo.form.TaskForm;
 import com.example.demo.repository.TaskRepository;
 
@@ -110,7 +112,12 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	
+	public List<Task> filterTask(CheckForm checkForm){
+		//変換処理
+		Check check = convertToCheck(checkForm);
+		
+		return taskRepository.filterTask(check);
+	}
 	
 	/**
 	 * タスクフォームをタスクエンティティに変換するメソッドです。
@@ -153,5 +160,17 @@ public class TaskServiceImpl implements TaskService{
 	    taskForm.setUpdatedAt(task.getUpdatedAt());
 	    return taskForm;
 	    }
+	
+	public Check convertToCheck(CheckForm checkForm) {
+		Check check = new Check();
+		check.setCheckStatus1(checkForm.getCheckStatus1());
+		check.setCheckStatus2(checkForm.getCheckStatus2());
+		check.setCheckStatus3(checkForm.getCheckStatus3());
+		check.setCheckPriority1(checkForm.getCheckPriority1());
+		check.setCheckPriority2(checkForm.getCheckPriority2());
+		check.setCheckPriority3(checkForm.getCheckPriority3());
+		check.setCheckPriority4(checkForm.getCheckPriority4());
+		return check;
+	}
 	
 }

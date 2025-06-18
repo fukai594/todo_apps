@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
 
 /**
@@ -49,4 +50,7 @@ public interface TaskMapper {
      * @return 削除された行数
      */
     int delete(int taskId);
+    
+    List<Task> filterTask(Check check);
+    
 }

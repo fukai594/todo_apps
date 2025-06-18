@@ -49,4 +49,35 @@
 	   UPDATE task SET title = #{title}, description = #{description},deadline = #{deadline},status = #{status}, progress = #{progress}, priority = #{priority}, updated_at = CURRENT_TIMESTAMP WHERE taskId = #{taskId} and updated_at = #{updatedAt}; 
    </update>
     
+<!-- タスクの更新 -->
+  <select id="filterTask" resultType="com.example.demo.entity.Task" parameterType="com.example.demo.entity.Check">
+    	SELECT
+	   taskid,
+	   title,
+	   description,
+	   deadline,
+	   status,
+	   progress,
+       	   priority,
+	   CASE
+             WHEN CURRENT_TIMESTAMP &gt; deadline and status != 3 THEN 1
+             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' &gt; deadline and status != 3 THEN 2
+           ELSE 0
+    	 END AS message
+        FROM task
+	WHERE deleteFlg=0
+	<if test = "checkStatus1 or checkStatus2 or checkStatus3 or checkPriority1 or checkPriority2 or checkPriority3 or checkPriority4">
+ 	 and(
+    		<if test = "checkStatus1">status = 1 or</if>
+    		<if test = "checkStatus2">status = 2 or</if>
+    		<if test = "checkStatus3">status = 3 or</if>
+		<if test = "checkPriority1">priority = 1 or</if>
+		<if test = "checkPriority2">priority = 2 or</if>
+		<if test = "checkPriority3">priority = 3 or</if>
+		<if test = "checkPriority4">priority = 4 or</if>
+    	1=0
+  	)
+	</if>
+	ORDER BY priority DESC,deadline;
+   </select>
 </mapper>

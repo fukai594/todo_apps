@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
+import com.example.demo.form.CheckForm;
 import com.example.demo.form.TaskForm;
 
 /**
@@ -57,5 +59,9 @@ public interface TaskService {
      * @return タスクのフォームデータ
      */
     TaskForm convertToTaskForm(Task task);
+    
+    List<Task> filterTask(CheckForm checkForm);
+    
+    Check convertToCheck(CheckForm checkForm);
 
 }

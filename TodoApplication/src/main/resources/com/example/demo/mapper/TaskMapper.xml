@@ -76,7 +76,8 @@
 		<if test = "checkPriority3">priority = 3 or</if>
 		<if test = "checkPriority4">priority = 4 or</if>
     	1=0
-  )
-</if>
+  	)
+	</if>
+	ORDER BY priority DESC,deadline;
    </select>
 </mapper>

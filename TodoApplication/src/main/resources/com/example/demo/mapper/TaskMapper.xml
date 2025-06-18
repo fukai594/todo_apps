@@ -50,28 +50,24 @@
    </update>
     
 <!-- タスクの更新 -->
-<select id="filterTask>
-	<select id="findAll" resultType="com.example.demo.entity.Task">
-        <![CDATA[
-	SELECT
-           taskid,
+  <select id="filterTask" resultType="com.example.demo.entity.Task" parameterType="com.example.demo.entity.Check">
+    	SELECT
+	   taskid,
 	   title,
 	   description,
 	   deadline,
 	   status,
 	   progress,
-           priority,
+       	   priority,
 	   CASE
-             WHEN CURRENT_TIMESTAMP > deadline and status <> 3 THEN 1
-             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' > deadline and status <> 3 THEN 2
+             WHEN CURRENT_TIMESTAMP &gt; deadline and status != 3 THEN 1
+             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' &gt; deadline and status != 3 THEN 2
            ELSE 0
     	 END AS message
         FROM task
-	WHERE deleteFlg = 0
-	ORDER BY priority DESC,deadline;
-        ]]>;
-    </select>
-
-</select>
-
+	WHERE deleteFlg=0
+         <if test = "checkStatus">
+           and status  = 1
+    	 </if>
+        </select>
 </mapper>

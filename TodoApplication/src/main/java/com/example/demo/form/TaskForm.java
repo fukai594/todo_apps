@@ -35,7 +35,7 @@ public class TaskForm {
 	@Min(value = 0)
 	@Max(value = 3)
     private int status;
-	
+
 //	進捗率0-100
 //	statusが1の時:0
 //	statusが3の時:100
@@ -54,11 +54,19 @@ public class TaskForm {
 		else if(status == 2 && progress ==  0 || status == 2 && progress == 100) return false;//statusが作業中の時
 		return true;
 	}
-	
 
-	
 	// 更新日時
 	private LocalDateTime updatedAt;
+	
+	private boolean checkStatus = false;
+	
+	public boolean isCheckStatus() {
+		return checkStatus;
+	}
+
+	public void setCheckStatus(boolean checkStatus) {
+		this.checkStatus = checkStatus;
+	}
 	
 	public int getTaskId() {
 		return taskId;

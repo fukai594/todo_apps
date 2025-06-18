@@ -56,7 +56,7 @@ public class Task {
     /**
      * 削除フラグ（タスクが削除されたかどうかを示す）。
      */
-    private Boolean deleteFlg;
+    private int deleteFlg;
     
     
     /**
@@ -145,11 +145,11 @@ public class Task {
         this.updatedAt = updatedAt;
     }
 
-    public Boolean getDeleteFlg() {
+    public int getDeleteFlg() {
         return deleteFlg;
     }
 
-    public void setDeleteFlg(Boolean deleteFlg) {
+    public void setDeleteFlg(int deleteFlg) {
         this.deleteFlg = deleteFlg;
     }
     

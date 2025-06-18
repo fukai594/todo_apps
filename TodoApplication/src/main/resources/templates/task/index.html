@@ -25,13 +25,12 @@
         </div>
 		
 		<div class="px-4 pt-2 my-2 text-right">
-			<form class="px-4 pt-3 my-3" method="get" th:action="@{/task/filter}">
+			<form class="px-4 pt-3 my-3" method="get" th:action="@{/task/filter}" th:object="${checkForm}">
 				<label>表示設定：</label>
-				<label><input type="checkbox" name="checkStatus" checked /> 未着手</label>
+				<label><input type="checkbox" th:field="*{checkStatus}"/> 未着手</label>
 				<button type="submit" class="btn btn-primary me-2" value="submit">search</button>
 			</form>
 		</div>
-		
         <div class="px-4 pt-2 my-2 text-center">
             <table class="table table-striped">
                 <thead>
@@ -50,7 +49,7 @@
                 </thead>
                 <tbody>
                   <!-- Sample Data -->
-                  <tr　th:each="taskList : ${taskList}" th:object="${taskList}">
+                  <tr th:each="taskList : ${taskList}" th:object="${taskList}">
                     <th scope="row" th:text="*{taskId}">1</th>
 					<td th:text="*{title}">title</th>
                     <td th:text="*{message == 1? '期限切れです' : message == 2 ? '期日が迫っています' : ''}" style="color: red">message</td>

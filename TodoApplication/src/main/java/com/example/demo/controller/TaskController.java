@@ -190,7 +190,7 @@ public class TaskController {
 	
 //	 フィルター機能	
 	 @GetMapping(value = "/task/filter")
-		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, Model model) {
 			
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";

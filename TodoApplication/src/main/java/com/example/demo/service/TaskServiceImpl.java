@@ -163,7 +163,13 @@ public class TaskServiceImpl implements TaskService{
 	
 	public Check convertToCheck(CheckForm checkForm) {
 		Check check = new Check();
-		check.setCheckStatus(checkForm.getCheckStatus());
+		check.setCheckStatus1(checkForm.getCheckStatus1());
+		check.setCheckStatus2(checkForm.getCheckStatus2());
+		check.setCheckStatus3(checkForm.getCheckStatus3());
+		check.setCheckPriority1(checkForm.getCheckPriority1());
+		check.setCheckPriority2(checkForm.getCheckPriority2());
+		check.setCheckPriority3(checkForm.getCheckPriority3());
+		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
 	}
 	

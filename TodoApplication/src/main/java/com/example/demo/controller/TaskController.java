@@ -196,8 +196,7 @@ public class TaskController {
 				return "task/index";
 		 	}
 		 	List<Task> taskList = taskService.filterTask(checkForm);
-		 	taskList.stream()
-		 	.forEach(t -> System.out.print(t.getStatus()));
+
 		 	model.addAttribute("taskList", taskList);
 			
 			return "task/index";

@@ -1,0 +1,22 @@
+@charset "UTF-8";
+h2{
+	color: cornflowerblue;
+}
+.filter-container{
+	margin-left: auto;
+	margin-bottom:10px;
+	width: 300px;
+	height: 200px;
+}
+.form-items{
+	margin-bottom: 5%;
+}
+.status-items{
+	margin-left:10%;
+}
+.priority-items{
+	margin-left:10%;
+}
+.button-items{
+	margin-left:10%;
+}

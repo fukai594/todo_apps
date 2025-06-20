@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+	<nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1">Practice</span>
+        </div>
+    </nav>
+	<div class="container">
+		<h1>Login</h1>
+		<form class="px-4 pt-3 my-3" method="get" th:action="@{/login}" th:object="${userForm}">
+            <div class="form-group mb-3">
+              <label>LoginId</label>
+              <input type="text" class="form-control" placeholder="loginId" name="loginId" th:value="*{loginId}">
+            </div>
+			<div class="form-group mb-3">
+              <label>Password</label>
+              <input type="text" class="form-control" placeholder="password" name="password" th:value="*{password}">
+			</div>
+			<button type="submit" class="btn btn-primary" value="Login">Login</button>
+		</form>
+	</div>
+</html>

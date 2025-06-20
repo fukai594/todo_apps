@@ -1,9 +1,12 @@
-package com.example.demo.entity;
+package com.example.demo.form;
 
 import java.time.LocalDateTime;
 
-public class User {
+import jakarta.validation.constraints.NotBlank;
+
+public class UserForm {
 	private int userNo;
+	@NotBlank
 	private String loginId;
 	private String password;
 	private String userName;

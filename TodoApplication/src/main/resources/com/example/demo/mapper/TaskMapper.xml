@@ -21,7 +21,7 @@
            ELSE 0
     	 END AS message
         FROM task
-	WHERE deleteFlg = 0
+	WHERE deleteFlg = 0 and loginid='aaa'
 	ORDER BY priority DESC,deadline;
         ]]>;
     </select>
@@ -65,7 +65,7 @@
            ELSE 0
     	 END AS message
         FROM task
-	WHERE deleteFlg=0
+	WHERE deleteFlg=0 and loginid='aaa'
 	<if test = "checkStatus1 or checkStatus2 or checkStatus3 or checkPriority1 or checkPriority2 or checkPriority3 or checkPriority4">
  	 and(
     		<if test = "checkStatus1">status = 1 or</if>

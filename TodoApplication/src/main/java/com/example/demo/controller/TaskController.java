@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.auth.AuthUserDetails;
 import com.example.demo.entity.Task;
 import com.example.demo.form.CheckForm;
 import com.example.demo.form.TaskForm;
@@ -40,13 +42,17 @@ public class TaskController {
      * @return "task/index" - タスク一覧表示用のHTMLテンプレートのパス
      */
 	@RequestMapping(value = "/task/list", method = RequestMethod.GET)
-	public String showTask(Model model) {
+	public String showTask(Authentication loginUser, Model model) {
+		
+		//タスクの一覧を取得
+		AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
+		String loginId = userDetails.getUser().getLoginId();
 		
 		//タスクの一覧を取得
 	 	CheckForm checkForm = new CheckForm();
 	 	model.addAttribute("checkForm", checkForm);
 	 	
-		List<Task> taskList = taskService.findAll();		
+		List<Task> taskList = taskService.findAll(loginId);		
 		model.addAttribute("taskList", taskList);
 		
 		return "task/index";
@@ -201,5 +207,4 @@ public class TaskController {
 			
 			return "task/index";
 		}
-
 }

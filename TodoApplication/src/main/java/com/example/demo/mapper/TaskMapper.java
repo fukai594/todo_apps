@@ -18,7 +18,7 @@ public interface TaskMapper {
      *
      * @return タスクのリスト
      */
-    List<Task> findAll();
+    List<Task> findAll(String loginId);
     
     /**
      * タスクを保存します。
@@ -52,5 +52,6 @@ public interface TaskMapper {
     int delete(int taskId);
     
     List<Task> filterTask(Check check);
+    
     
 }

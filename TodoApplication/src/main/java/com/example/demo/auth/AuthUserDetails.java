@@ -17,6 +17,9 @@ public class AuthUserDetails implements UserDetails{
 	private final User user;
 	private final Collection<? extends GrantedAuthority> authorities;
 	
+	//自作プロパティ
+
+	
 	public AuthUserDetails(User user) {
 		this.user = user;
 		List<String> list = new ArrayList<String>(Arrays.asList(user.getUserName()));
@@ -50,6 +53,8 @@ public class AuthUserDetails implements UserDetails{
 		//return null;
 		return user.getUserName();
 	}
+	
+
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO 自動生成されたメソッド・スタブ

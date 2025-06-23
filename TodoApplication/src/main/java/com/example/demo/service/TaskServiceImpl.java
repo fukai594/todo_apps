@@ -30,8 +30,8 @@ public class TaskServiceImpl implements TaskService{
 	 * @return List<Task> タスク一覧。
 	 */
 	@Override
-	public List<Task> findAll() {
-		return taskRepository.findAll();
+	public List<Task> findAll(String loginId) {
+		return taskRepository.findAll(loginId);
 		}
 	
 	
@@ -172,5 +172,4 @@ public class TaskServiceImpl implements TaskService{
 		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
 	}
-	
 }

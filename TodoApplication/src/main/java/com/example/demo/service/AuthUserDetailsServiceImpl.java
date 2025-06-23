@@ -23,10 +23,10 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException{
 		User loginUser = userRepository.findByLoginId(loginId);
-		System.out.print(loginId);
 		AuthUserDetails user = new AuthUserDetails(loginUser);
-		System.out.print(user.getUsername());
-		System.out.print(user.getPassword());
+		User user1 = user.getUser();
+		System.out.println(user1.getLoginId());
+		System.out.println(user1.getLastLogin());
 		return user;
 	}
 }

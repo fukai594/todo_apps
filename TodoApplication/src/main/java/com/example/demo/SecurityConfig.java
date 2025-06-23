@@ -19,7 +19,7 @@ public class SecurityConfig {
 		http.formLogin(login -> login// 指定したURLがリクエストされるとログイン認証を行う。
 			.loginProcessingUrl("/login") 
 			.loginPage("/login") // ログイン時のURLの指定
-			.defaultSuccessUrl("/success")// 認証成功後にリダイレクトする場所の指定
+			.defaultSuccessUrl("/task/list")// 認証成功後にリダイレクトする場所の指定
 			.failureUrl("/login?error=true") 
 			.permitAll()
 		).logout(logout -> logout

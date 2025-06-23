@@ -7,6 +7,6 @@
     <select id="findByLoginId" resultType="com.example.demo.entity.User">
         SELECT * FROM users where loginId = #{loginId};
     </select>
-
+ 	
 	
 </mapper>

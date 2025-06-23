@@ -31,8 +31,8 @@ public class TaskRepository {
      *
      * @return タスクのリスト
      */
-    public List<Task> findAll() {
-        return taskMapper.findAll();
+    public List<Task> findAll(String loginId) {
+        return taskMapper.findAll(loginId);
     }
     
     /**
@@ -77,5 +77,4 @@ public class TaskRepository {
     public List<Task> filterTask(Check check){
     	return taskMapper.filterTask(check);
     }
-    
 }

@@ -21,7 +21,7 @@
            ELSE 0
     	 END AS message
         FROM task
-	WHERE deleteFlg = 0 and loginid='aaa'
+	WHERE deleteFlg = 0 and loginId=#{loginId}
 	ORDER BY priority DESC,deadline;
         ]]>;
     </select>
@@ -80,4 +80,5 @@
 	</if>
 	ORDER BY priority DESC,deadline;
    </select>
+
 </mapper>

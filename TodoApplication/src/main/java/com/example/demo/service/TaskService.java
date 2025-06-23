@@ -60,7 +60,7 @@ public interface TaskService {
      */
     TaskForm convertToTaskForm(Task task);
     
-    List<Task> filterTask(CheckForm checkForm);
+    List<Task> filterTask(CheckForm checkForm, String loginId);
     
     Check convertToCheck(CheckForm checkForm);
 

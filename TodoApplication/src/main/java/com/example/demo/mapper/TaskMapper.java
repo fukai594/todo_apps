@@ -3,6 +3,7 @@ package com.example.demo.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
@@ -51,7 +52,7 @@ public interface TaskMapper {
      */
     int delete(int taskId);
     
-    List<Task> filterTask(Check check);
+    List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId);
     
     
 }

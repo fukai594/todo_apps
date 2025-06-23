@@ -44,7 +44,7 @@ public class TaskController {
 	@RequestMapping(value = "/task/list", method = RequestMethod.GET)
 	public String showTask(Authentication loginUser, Model model) {
 		
-		//タスクの一覧を取得
+		//ログインしているユーザーのloginIdを取得
 		AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
 		String loginId = userDetails.getUser().getLoginId();
 		
@@ -54,6 +54,10 @@ public class TaskController {
 	 	
 		List<Task> taskList = taskService.findAll(loginId);		
 		model.addAttribute("taskList", taskList);
+		
+		//loginユーザーを表示する
+		model.addAttribute("loginId", loginId);
+		
 		
 		return "task/index";
 	}
@@ -196,12 +200,17 @@ public class TaskController {
 	
 //	 フィルター機能	
 	 @GetMapping(value = "/task/filter")
-		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, Model model) {
+		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, Model model, Authentication loginUser) {
 			
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
 		 	}
-		 	List<Task> taskList = taskService.filterTask(checkForm);
+		 	
+		 	//ログインしているユーザーのloginIdを取得
+			AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
+			String loginId = userDetails.getUser().getLoginId();
+			
+		 	List<Task> taskList = taskService.filterTask(checkForm, loginId);
 
 		 	model.addAttribute("taskList", taskList);
 			

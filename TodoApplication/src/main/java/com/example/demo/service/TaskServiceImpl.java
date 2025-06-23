@@ -112,11 +112,11 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	public List<Task> filterTask(CheckForm checkForm){
+	public List<Task> filterTask(CheckForm checkForm, String loginId){
 		//変換処理
 		Check check = convertToCheck(checkForm);
 		
-		return taskRepository.filterTask(check);
+		return taskRepository.filterTask(check, loginId);
 	}
 	
 	/**

@@ -12,7 +12,7 @@ public class UserController {
 	@GetMapping("/login")
 	public String login(@RequestParam(value = "error", required = false) String error, Model model) {
 		if(error != null) {
-			model.addAttribute("errorMessage","メールアドレスまたはパスワードが正しくありません。");
+			model.addAttribute("errorMessage","IDまたはパスワードが正しくありません。");
 		}
         return "/login";
 	}

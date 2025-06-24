@@ -43,7 +43,6 @@ public class TaskForm {
 	@Max(value=100)
 	private int progress;
 	
-//エラー定義作成予定
 	private int priority;
 	
 //	作業中の時の条件
@@ -55,6 +54,8 @@ public class TaskForm {
 		return true;
 	}
 
+	private String loginId;
+	
 	// 更新日時
 	private LocalDateTime updatedAt;
 	
@@ -137,5 +138,13 @@ public class TaskForm {
 
 	public void setMessage(int message) {
 		this.message = message;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 }

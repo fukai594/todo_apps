@@ -41,8 +41,10 @@ public class Task {
 	/**
      * ユーザーID（タスクを所有するユーザーの識別子）。
      */
+//    削除予定
     private Integer userId;
 
+    private String loginId;
     /**
      * タスクの作成日時（デフォルトは現在の日時）。
      */
@@ -64,6 +66,7 @@ public class Task {
      */
     private int message;
 
+    
     
 	public int getTaskId() {
         return taskId;
@@ -159,6 +162,14 @@ public class Task {
 
 	public void setMessage(int message) {
 		this.message = message;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 
 	

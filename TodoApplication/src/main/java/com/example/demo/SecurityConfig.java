@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.example.demo.security.CustomAuthenticationFailureHandler;
+
 @Configuration
 public class SecurityConfig {
 	private final UserDetailsService userDetailsService;
@@ -15,12 +17,12 @@ public class SecurityConfig {
 		this.userDetailsService = userDetailsService;
 	}
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+	SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFailureHandler failureHandler) throws Exception{
 		http.formLogin(login -> login// 指定したURLがリクエストされるとログイン認証を行う。
 			.loginProcessingUrl("/login") 
 			.loginPage("/login") // ログイン時のURLの指定
 			.defaultSuccessUrl("/task/list")// 認証成功後にリダイレクトする場所の指定
-			.failureUrl("/login?error=true") 
+			.failureHandler(failureHandler) // カスタムハンドラーを設定
 			.permitAll()
 		).logout(logout -> logout
 			.logoutSuccessUrl("/login")

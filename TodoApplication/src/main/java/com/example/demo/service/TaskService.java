@@ -17,7 +17,7 @@ public interface TaskService {
      *
      * @return タスクのリスト
      */
-	List<Task> findAll();
+	List<Task> findAll(String loginId);
 	
     /**
      * タスクを保存します。
@@ -60,7 +60,7 @@ public interface TaskService {
      */
     TaskForm convertToTaskForm(Task task);
     
-    List<Task> filterTask(CheckForm checkForm);
+    List<Task> filterTask(CheckForm checkForm, String loginId);
     
     Check convertToCheck(CheckForm checkForm);
 

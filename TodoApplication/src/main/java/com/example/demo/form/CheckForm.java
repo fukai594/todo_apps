@@ -1,9 +1,7 @@
 package com.example.demo.form;
 
-import jakarta.validation.constraints.NotNull;
-
 public class CheckForm {
-	@NotNull
+	
 	private boolean checkStatus1=false;
 	
 	private boolean checkStatus2=false;

@@ -21,7 +21,15 @@
 	          <span class="navbar-brand mb-0 h1" th:text="${loginId}">Practice</span>
 	        </div>
 	    </nav>
-		
+		<div class="container">
+		        <div class="px-4 pt-3 my-3 text-center border-bottom">
+		            <h1 class="display-4 fw-bold text-body-emphasis mb-3">ToDo Application</h1>
+		            <div class="col-lg-6 mx-auto">
+		              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+		                <a type="button" class="btn btn-primary btn-lg px-4 me-sm-3" th:href="@{/task/add}">create</a>
+		              </div>
+		            </div>
+		        </div>
 		<div class="filter-container">
 			<form method="get" th:action="@{/task/filter}" th:object="${checkForm}">
 				<div class="form-items">

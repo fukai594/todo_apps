@@ -1,7 +1,5 @@
 @charset "UTF-8";
-h2{
-	color: cornflowerblue;
-}
+
 .filter-container{
 	margin-left: auto;
 	margin-bottom:10px;
@@ -19,4 +17,21 @@ h2{
 }
 .button-items{
 	margin-left:10%;
+}
+.navigation{
+	display: flex;
+	justify-content: flex-end;
+}
+.user-info{
+	margin-right:30px
+}
+/* リンク風のスタイルをボタンに適用 */
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #0d6efd; /* ブートストラップのリンク色 */
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
 }

@@ -1,9 +1,9 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -12,22 +12,28 @@ import com.example.demo.security.CustomAuthenticationFailureHandler;
 
 @Configuration
 public class SecurityConfig {
-	private final UserDetailsService userDetailsService;
-	public  SecurityConfig(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+	@Autowired
+	private CustomAuthenticationFailureHandler handler;
+
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFailureHandler failureHandler) throws Exception{
-		http.formLogin(login -> login// 指定したURLがリクエストされるとログイン認証を行う。
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+		http.authorizeHttpRequests((requests) -> requests
+			.requestMatchers("/css/**").permitAll()
+		)
+			.formLogin(login -> login// 指定したURLがリクエストされるとログイン認証を行う。
 			.loginProcessingUrl("/login") 
 			.loginPage("/login") // ログイン時のURLの指定
-			.defaultSuccessUrl("/task/list")// 認証成功後にリダイレクトする場所の指定
-			.failureHandler(failureHandler) // カスタムハンドラーを設定
+			.defaultSuccessUrl("/task/list", true)// 認証成功後にリダイレクトする場所の指定、強制的に遷移
+			.failureHandler(handler) // カスタムハンドラーを設定
+			.failureUrl("/login?error=true")
 			.permitAll()
-		).logout(logout -> logout
+		).logout((logout) -> logout
+			.logoutUrl("/logout")
 			.logoutSuccessUrl("/login")
+			.clearAuthentication(true)
 		).authorizeHttpRequests(ahr -> ahr
-		.anyRequest().authenticated()//ログインページ以外のURLへはログイン後のみアクセス可能
+			.requestMatchers("/logout").permitAll()
+			.anyRequest().authenticated()//ログインページ以外のURLへはログイン後のみアクセス可能
 		);
 		return http.build();
 	}

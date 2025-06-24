@@ -24,9 +24,6 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 	public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException{
 		User loginUser = userRepository.findByLoginId(loginId);
 		AuthUserDetails user = new AuthUserDetails(loginUser);
-		User user1 = user.getUser();
-		System.out.println(user1.getLoginId());
-		System.out.println(user1.getLastLogin());
 		return user;
 	}
 }

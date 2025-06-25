@@ -18,7 +18,7 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http.authorizeHttpRequests((requests) -> requests
-			.requestMatchers("/css/**").permitAll()
+			.requestMatchers("/css/**", "/signup").permitAll()
 		)
 			.formLogin(login -> login// 指定したURLがリクエストされるとログイン認証を行う。
 			.loginProcessingUrl("/login") 

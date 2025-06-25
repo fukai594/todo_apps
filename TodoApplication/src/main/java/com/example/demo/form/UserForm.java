@@ -3,18 +3,23 @@ package com.example.demo.form;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserForm {
 	
 	private int userNo;
-// タイトルは1文字以上100文字以下
+
 	@NotBlank
-	@Size(min = 1, max = 100)
+	@Size(min = 1, max = 32)
 	private String loginId;
 	
+	@NotBlank
+	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!Q#$%&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,32}$", message = "パスワードの要件を満たしていません")
 	private String password;
 	
+	@NotBlank
+	@Size(min = 1, max = 32)
 	private String userName;
 	
 	private int deleteFlg;
@@ -49,6 +54,7 @@ public class UserForm {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	//不要
 	public int getDeleteFlg() {
 		return deleteFlg;
 	}

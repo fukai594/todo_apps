@@ -14,5 +14,6 @@ public class Constants {
     public static final String DELETE_COMPLETE = "The data was successfully deleted.";
     public static final String ERROR_MESSAGE = "エラーが発生しました.";
     public static final String ILLEGALARGUMENTEXCEPTION_ERROR = "タスクIDは正の整数である必要があります。";
+    public static final String USER_REGISTER_COMPLETE = "New registrasion completed";
 
 }

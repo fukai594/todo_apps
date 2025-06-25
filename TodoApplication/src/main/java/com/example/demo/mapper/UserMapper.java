@@ -7,4 +7,6 @@ import com.example.demo.entity.User;
 @Mapper
 public interface UserMapper {
 	User findByLoginId(String loginId);
+	int isExistUser(String loginId);
+	void register(User user);
 }

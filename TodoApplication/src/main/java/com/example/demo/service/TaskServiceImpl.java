@@ -49,9 +49,6 @@ public class TaskServiceImpl implements TaskService{
 		//変換処理
 		Task task = convertToTask(taskForm);
 		
-		//完了メッセージを宣言
-		String completeMessage = null;
-		
 		if(task.getTaskId() != 0) {
 			//変更処理の場合
 			
@@ -61,15 +58,13 @@ public class TaskServiceImpl implements TaskService{
 				throw new OptimisticLockingFailureException("楽観ロックエラー");
 			}
 			//完了メッセージをセット
-			completeMessage = Constants.EDIT_COMPLETE;
-			return completeMessage;
+			return Constants.EDIT_COMPLETE;
 			
 		}else {
 			//登録処理の場合
 			taskRepository.save(task);
 			//完了メッセージをセット
-			completeMessage = Constants.REGISTER_COMPLETE;
-			return completeMessage;
+			return Constants.REGISTER_COMPLETE;
 		}
 	}
 	
@@ -107,8 +102,7 @@ public class TaskServiceImpl implements TaskService{
       	taskRepository.delete(taskId);
 		
 		//完了メッセージをセット
-		String completeMessage = Constants.DELETE_COMPLETE;
-		return completeMessage;
+		return Constants.DELETE_COMPLETE;
 		
 	}
 	

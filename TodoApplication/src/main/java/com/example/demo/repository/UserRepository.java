@@ -16,4 +16,11 @@ public class UserRepository {
 	public User findByLoginId(String loginId) {
 		return userMapper.findByLoginId(loginId);
 	}
+	
+	public int isExistUser(String loginId) {
+		return userMapper.isExistUser(loginId);
+	}
+	public void register(User user) {
+		userMapper.register(user);
+	}
 }

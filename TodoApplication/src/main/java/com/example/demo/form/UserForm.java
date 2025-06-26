@@ -2,26 +2,36 @@ package com.example.demo.form;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserForm {
 	
 	private int userNo;
-
-	@NotBlank
-	@Size(min = 1, max = 32)
+	
+	@Pattern(regexp="^[^\\s　]*$", message="スペースは使用できません")
+	@Size(min = 1, max = 32, message="1から32文字で入力してください")
 	private String loginId;
 	
-	@NotBlank
+	@Size(min = 8, max = 32, message="8から32文字で入力してください")
 	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@!Q#$%&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,32}$", message = "パスワードの要件を満たしていません")
 	private String password;
+
+	private String confirmPassword;
 	
-	@NotBlank
-	@Size(min = 1, max = 32)
+	@AssertTrue(message="パスワードが一致しません。")
+	public boolean isPasswordValid() {
+		if(password == null || confirmPassword == null) {
+			return false;
+		}
+		return password.equals(confirmPassword);
+	}
+	
+	@Pattern(regexp="^[^\\s　]*$", message="スペースは使用できません")
+	@Size(min = 1, max = 32, message="1から32文字で入力してください")
 	private String userName;
-	
+
 	private int deleteFlg;
 	
 	private int failedLoginAttemps;
@@ -78,5 +88,11 @@ public class UserForm {
 	}
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
 }

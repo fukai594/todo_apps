@@ -18,11 +18,8 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http.authorizeHttpRequests((requests) -> requests
-<<<<<<< HEAD
 			.requestMatchers("/css/**", "/signup").permitAll()
-=======
 			.requestMatchers("/css/**", "/signup/**","/signup","/userRegisterComplete","/userRegisterComplete/**").permitAll()
->>>>>>> refs/heads/login
 		)
 			.formLogin(login -> login// 指定したURLがリクエストされるとログイン認証を行う。
 			.loginProcessingUrl("/login") 

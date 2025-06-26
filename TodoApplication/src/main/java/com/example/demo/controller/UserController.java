@@ -49,13 +49,13 @@ public class UserController {
 		}
 		try {
 			String completeMessage = userDetailsService.register(userForm);
-			redirectAttributes.addFlashAttribute("completeMessage", completeMessage);
+			model.addAttribute("completeMessage", completeMessage);
 			
 		}catch(DataAccessException e) {
 			model.addAttribute("signupError","ユーザー登録に失敗しました。");
 			return "/signup";
 		}
 		
-		return "redirect:/complete";
+		return "/userComplete";
 	}
 }

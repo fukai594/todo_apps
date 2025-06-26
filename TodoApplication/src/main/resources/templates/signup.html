@@ -14,14 +14,35 @@
         </div>
     </nav>
 <body>
-	<h1>sign up</h1>
-	<form th:action="@{/signup}" method="post" th:object="${userForm}"class="mb-3">
-		<div class="form-group mb-3">
-          <label>LoginId</label>
-          <input type="text" class="form-control" placeholder="LoginId" name="loginId" th:value="*{loginId}">
-		  <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}" class="text-danger"></div>
-        </div>
-     	<button type="submit" class="btn btn-primary me-2" value="submit">submit</button>
-    </form> 
+	<div class="container">
+		<h1>sign up</h1>
+		<form th:action="@{/signup}" method="post" th:object="${userForm}" class="px-4 pt-3 my-3">
+			<div class="form-group mb-3">
+	          <label>LoginId</label>
+	          <input type="text" class="form-control" placeholder="LoginId" name="loginId" th:value="*{loginId}">
+			  <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}" class="text-danger"></div>
+	        </div>
+			<div class="form-group mb-3">
+	          <label>Password（大文字/小文字/数字/記号を含めてください)</label>
+	          <input type="text" class="form-control" placeholder="Password" name="password" th:value="*{password}">
+			  <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+	        </div>
+			<div class="form-group mb-3">
+	          <label>UserName</label>
+	          <input type="text" class="form-control" placeholder="UserName" name="userName" th:value="*{userName}">
+			  <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-danger"></div>
+	        </div>
+			<input type="hidden" name="userNo" th:value="*{userNo}">
+			<input type="hidden" name="lastLogin" th:value="*{lastLogin}">
+	        <input type="hidden" name="createdAt" th:value="*{createdAt}">
+			<div class="text-danger">
+				<p th:text="${signupError}"></p>
+			</div>
+	     	<button type="submit" class="btn btn-primary me-2" value="submit">submit</button>
+	    </form>
+		<form th:action="@{/login}" method="get" name="back" class="px-4 pt-3 my-3">
+			<button type="submit" class="btn btn-secondary me-2">back</button>
+		</form>
+	</div>
 </body>
 </html>

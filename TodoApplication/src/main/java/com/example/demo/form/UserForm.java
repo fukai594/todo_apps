@@ -15,7 +15,7 @@ public class UserForm {
 	private String loginId;
 	
 	@NotBlank
-	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!Q#$%&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,32}$", message = "パスワードの要件を満たしていません")
+	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@!Q#$%&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,32}$", message = "パスワードの要件を満たしていません")
 	private String password;
 	
 	@NotBlank

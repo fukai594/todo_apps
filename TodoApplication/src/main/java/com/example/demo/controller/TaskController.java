@@ -141,10 +141,8 @@ public class TaskController {
 			// バリデーションエラーがある場合は変更画面に遷移
 			return "task/edit";
 		}
-
-		String loginId = getLoginId(loginUser);
 		//ログインIDをtaskFormにセットする
-		taskForm.setLoginId(loginId);
+		taskForm.setLoginId(getLoginId(loginUser));
 		//保存処理
 		String completeMessage =taskService.save(taskForm);
 		
@@ -176,7 +174,6 @@ public class TaskController {
 		
 	    // タスクIDに基づいてタスクを取得
 		TaskForm taskForm = taskService.getTask(taskId);
-				
 		model.addAttribute("taskForm", taskForm);
 		return "task/deleteConfirm";
 	}
@@ -218,11 +215,7 @@ public class TaskController {
 				return "task/index";
 		 	}
 		 	
-		 	//ログインしているユーザーのloginIdを取得
-			AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-			String loginId = userDetails.getUser().getLoginId();
-			
-		 	List<Task> taskList = taskService.filterTask(checkForm, loginId);
+		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser));
 
 		 	model.addAttribute("taskList", taskList);
 			

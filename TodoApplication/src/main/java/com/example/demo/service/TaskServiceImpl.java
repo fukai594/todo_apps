@@ -48,7 +48,7 @@ public class TaskServiceImpl implements TaskService{
 		
 		//変換処理
 		Task task = convertToTask(taskForm);
-		
+		System.out.println(task.getLoginId());
 		if(task.getTaskId() != 0) {
 			//変更処理の場合
 			
@@ -128,6 +128,7 @@ public class TaskServiceImpl implements TaskService{
 	    task.setDeadline(taskForm.getDeadline());
 	    task.setStatus(taskForm.getStatus());
 	    task.setProgress(taskForm.getProgress());
+	    task.setLoginId(taskForm.getLoginId());
 	    task.setPriority(taskForm.getPriority());
 	    task.setUpdatedAt(taskForm.getUpdatedAt());
 	    return task;
@@ -150,6 +151,7 @@ public class TaskServiceImpl implements TaskService{
 	    taskForm.setDeadline(task.getDeadline());
 	    taskForm.setStatus(task.getStatus());
 	    taskForm.setProgress(task.getProgress());
+	    taskForm.setLoginId(task.getLoginId());
 	    taskForm.setPriority(task.getPriority());
 	    taskForm.setUpdatedAt(task.getUpdatedAt());
 	    return taskForm;

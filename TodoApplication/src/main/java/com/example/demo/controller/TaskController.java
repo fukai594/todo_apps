@@ -34,7 +34,11 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
-
+    //ログイン中のユーザーのloginIdを取得
+	 private String getLoginId(Authentication loginUser) {
+		 AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
+		 return userDetails.getUser().getLoginId();	 
+	 }
     /**
      * タスクの一覧を表示するメソッドです。
      * 
@@ -125,14 +129,23 @@ public class TaskController {
 	 * @return "redirect:/task/complete" - タスク確認画面へのリダイレクト
 	 */
 	@PostMapping(value = "/task/save")
-	public String saveTask(@Validated TaskForm taskForm, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model) {
+	public String saveTask(
+			@Validated TaskForm taskForm,
+			BindingResult bindingResult,
+			RedirectAttributes redirectAttributes,
+			Model model,
+			Authentication loginUser
+		) {
 		
 		//バリデーションチェック
 		if (bindingResult.hasErrors()) {
 			// バリデーションエラーがある場合は変更画面に遷移
 			return "task/edit";
 		}
-		
+
+		String loginId = getLoginId(loginUser);
+		//ログインIDをtaskFormにセットする
+		taskForm.setLoginId(loginId);
 		//保存処理
 		String completeMessage =taskService.save(taskForm);
 		

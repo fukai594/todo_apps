@@ -29,9 +29,9 @@
     <!-- 新規タスクの登録 -->
     <insert id="save">
         INSERT INTO task
-            (title, description, deadline, status, progress, priority, created_at,updated_at, deleteFlg)
+            (title, description, deadline, status, progress, priority, loginId, created_at,updated_at, deleteFlg)
         VALUES
-            (#{title}, #{description}, #{deadline}, 1, 0, #{priority},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,0);
+            (#{title}, #{description}, #{deadline}, 1, 0, #{priority},#{loginId},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,0);
     </insert>
     
         <!-- タスクIDを指定してタスクを取得 -->

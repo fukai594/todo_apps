@@ -49,8 +49,7 @@ public class TaskController {
 	public String showTask(Authentication loginUser, Model model) {
 		
 		//ログインしているユーザーのloginIdを取得
-		AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-		String loginId = userDetails.getUser().getLoginId();
+		String loginId = getLoginId(loginUser);
 		
 		//タスクの一覧を取得
 	 	CheckForm checkForm = new CheckForm();

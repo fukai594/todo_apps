@@ -48,7 +48,7 @@ public class TaskServiceImpl implements TaskService{
 		
 		//変換処理
 		Task task = convertToTask(taskForm);
-		System.out.println(task.getLoginId());
+
 		if(task.getTaskId() != 0) {
 			//変更処理の場合
 			

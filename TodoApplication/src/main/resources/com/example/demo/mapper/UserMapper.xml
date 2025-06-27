@@ -3,10 +3,34 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.UserMapper">
-	<!-- loginIDを指定してユーザーを取得 -->
+    <!-- loginIDを指定してユーザーを取得 -->
     <select id="findByLoginId" resultType="com.example.demo.entity.User">
         SELECT * FROM users where loginId = #{loginId};
     </select>
- 	
-	
+
+    <!-- loginIDを指定して件数を取得 -->
+    <select id="isExistUser" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM users where loginId = #{loginId};
+    </select>
+    
+    <insert id="register">
+        INSERT INTO users(
+        loginId
+        ,password
+        ,userName
+        ,deleteFlg
+        ,failedLoginAttemps
+        ,lastLogin
+        ,createdAt
+        )
+        VALUES(
+        #{loginId}
+        ,#{password}
+        ,#{userName}
+        ,0
+        ,0
+        ,CURRENT_TIMESTAMP
+        ,CURRENT_TIMESTAMP
+        );
+    </insert>
 </mapper>

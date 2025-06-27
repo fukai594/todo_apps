@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class TaskForm {
@@ -14,7 +14,7 @@ public class TaskForm {
 	private int taskId;
 	
 	// タイトルは1文字以上100文字以下
-	@NotBlank
+	@Pattern(regexp="^[^\\s　].*$", message="スペースは使用できません")
 	@Size(min = 1, max = 100)
     private String title;
 	

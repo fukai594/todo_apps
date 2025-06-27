@@ -34,7 +34,11 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
-
+    //ログイン中のユーザーのloginIdを取得
+	 private String getLoginId(Authentication loginUser) {
+		 AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
+		 return userDetails.getUser().getLoginId();	 
+	 }
     /**
      * タスクの一覧を表示するメソッドです。
      * 
@@ -45,8 +49,7 @@ public class TaskController {
 	public String showTask(Authentication loginUser, Model model) {
 		
 		//ログインしているユーザーのloginIdを取得
-		AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-		String loginId = userDetails.getUser().getLoginId();
+		String loginId = getLoginId(loginUser);
 		
 		//タスクの一覧を取得
 	 	CheckForm checkForm = new CheckForm();
@@ -125,14 +128,21 @@ public class TaskController {
 	 * @return "redirect:/task/complete" - タスク確認画面へのリダイレクト
 	 */
 	@PostMapping(value = "/task/save")
-	public String saveTask(@Validated TaskForm taskForm, BindingResult bindingResult, RedirectAttributes redirectAttributes,Model model) {
+	public String saveTask(
+			@Validated TaskForm taskForm,
+			BindingResult bindingResult,
+			RedirectAttributes redirectAttributes,
+			Model model,
+			Authentication loginUser
+		) {
 		
 		//バリデーションチェック
 		if (bindingResult.hasErrors()) {
 			// バリデーションエラーがある場合は変更画面に遷移
 			return "task/edit";
 		}
-		
+		//ログインIDをtaskFormにセットする
+		taskForm.setLoginId(getLoginId(loginUser));
 		//保存処理
 		String completeMessage =taskService.save(taskForm);
 		
@@ -164,7 +174,6 @@ public class TaskController {
 		
 	    // タスクIDに基づいてタスクを取得
 		TaskForm taskForm = taskService.getTask(taskId);
-				
 		model.addAttribute("taskForm", taskForm);
 		return "task/deleteConfirm";
 	}
@@ -206,11 +215,7 @@ public class TaskController {
 				return "task/index";
 		 	}
 		 	
-		 	//ログインしているユーザーのloginIdを取得
-			AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-			String loginId = userDetails.getUser().getLoginId();
-			
-		 	List<Task> taskList = taskService.filterTask(checkForm, loginId);
+		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser));
 
 		 	model.addAttribute("taskList", taskList);
 			

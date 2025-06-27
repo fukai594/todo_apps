@@ -41,9 +41,6 @@ public class Task {
 	/**
      * ユーザーID（タスクを所有するユーザーの識別子）。
      */
-//    削除予定
-    private Integer userId;
-
     private String loginId;
     /**
      * タスクの作成日時（デフォルトは現在の日時）。
@@ -123,14 +120,6 @@ public class Task {
 	public void setPriority(int priority) {
 		this.priority = priority;
 	}
-	
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

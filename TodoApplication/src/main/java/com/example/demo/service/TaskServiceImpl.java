@@ -75,10 +75,10 @@ public class TaskServiceImpl implements TaskService{
 	 * @return 対応するタスクフォーム
 	 */
 	@Override
-	public TaskForm getTask(int taskId) {
+	public TaskForm getTask(int taskId, String loginId) {
 		
 		//タスクを取得
-		Task task =taskRepository.getTask(taskId);
+		Task task =taskRepository.getTask(taskId, loginId);
 		
 		//変換処理
 		TaskForm taskForm =convertToTaskForm(task);

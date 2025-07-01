@@ -34,7 +34,7 @@ public interface TaskMapper {
      * @param taskId タスクID
      * @return タスク
      */
-    Task getTask(int taskId);
+    Task getTask(int taskId, String loginId);
 
     /**
      * タスクを更新します。

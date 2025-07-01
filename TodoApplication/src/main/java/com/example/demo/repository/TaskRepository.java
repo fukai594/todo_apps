@@ -50,8 +50,8 @@ public class TaskRepository {
      * @param taskId タスクID
      * @return タスク
      */
-    public Task getTask(int taskId) {
-        return taskMapper.getTask(taskId);
+    public Task getTask(int taskId, String loginId) {
+        return taskMapper.getTask(taskId, loginId);
     }
 
     /**

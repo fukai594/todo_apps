@@ -22,7 +22,7 @@
 			  <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}" class="text-danger"></div>
 	        </div>
 			<div class="form-group mb-3">
-	          <label>Password（大文字/小文字/数字/記号を含めてください)</label>
+	          <label>Password(大文字/小文字/数字/記号を含めてください)</label>
 	          <input type="password" class="form-control" placeholder="Password" name="password" th:value="*{password}">
 			  <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
 	        </div>

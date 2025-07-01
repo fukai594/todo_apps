@@ -36,7 +36,7 @@
     
         <!-- タスクIDを指定してタスクを取得 -->
     <select id="getTask" resultType="com.example.demo.entity.Task">
-        SELECT * FROM task where taskId = #{taskId} and deleteFlg = 0;
+        SELECT * FROM task where taskId = #{taskId} and deleteFlg = 0 and loginId = #{loginId};
 	</select>
 	
 	   <!-- タスクの削除 -->

@@ -33,7 +33,7 @@ public interface TaskService {
      * @param taskId タスクID
      * @return タスクのフォームデータ
      */
-	TaskForm getTask(int taskId);
+	TaskForm getTask(int taskId, String loginId);
 	
     /**
      * タスクを削除します。

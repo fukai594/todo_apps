@@ -56,14 +56,9 @@ public class TaskController {
 		
 		//ログインしているユーザーのloginIdを取得
 		String loginId = getLoginId(loginUser);
-		
-		//全件数を取得
-		int taskAllCount = taskService.getAllTaskCount(loginId);
-		System.out.println(taskAllCount);
 		//ページネーション
 		Pageable pageable = PageRequest.of(page, size);
 		List<Task>taskList = taskService.findTaskbyPage(loginId, pageable);
-//		int allPageNum = taskService.getAllPageNum();
 		model.addAttribute("page",page);
 		model.addAttribute("size",size);
 		model.addAttribute("pageSize", taskList.size());
@@ -248,14 +243,25 @@ public class TaskController {
 	
 //	 フィルター機能	
 	 @GetMapping(value = "/task/filter")
-		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, Model model, Authentication loginUser) {
+		public String showFilter(
+				@Validated CheckForm checkForm,
+				BindingResult bindingResult,
+				Model model,
+				Authentication loginUser,
+				@RequestParam(defaultValue="0") int page,
+				@RequestParam(defaultValue="10") int size) {
 			
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
 		 	}
-		 	
-		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser));
+			Pageable pageable = PageRequest.of(page, size);
+//			List<Task>taskList = taskService.findTaskbyPage(getLoginId(loginUser), pageable);
+			
+		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable);
 
+		 	model.addAttribute("page",page);
+		 	model.addAttribute("size",size);
+		 	model.addAttribute("pageSize", taskList.size());
 		 	model.addAttribute("taskList", taskList);
 			
 			return "task/index";

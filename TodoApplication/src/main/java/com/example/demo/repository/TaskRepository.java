@@ -74,8 +74,8 @@ public class TaskRepository {
         return taskMapper.delete(taskId);
     }
 
-    public List<Task> filterTask(Check check, String loginId){
-    	return taskMapper.filterTask(check, loginId);
+    public List<Task> filterTask(Check check, String loginId, int limit, int offset){
+    	return taskMapper.filterTask(check, loginId, limit, offset);
     }
     
     public List<Task> findTaskbyPage(String loginId, int limit, int offset){

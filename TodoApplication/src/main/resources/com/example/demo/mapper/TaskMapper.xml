@@ -22,6 +22,7 @@
     	 END AS message
         FROM task
 	WHERE deleteFlg = 0 and loginId=#{loginId}
+
 	ORDER BY priority DESC,deadline
 	LIMIT 5 OFFSET 5 
         ]]>;
@@ -114,7 +115,8 @@
     	1=0
   	)
 	</if>
-	ORDER BY priority DESC,deadline;
+	ORDER BY priority DESC,deadline
+        LIMIT #{limit} OFFSET #{offset};
    </select>
 
 </mapper>

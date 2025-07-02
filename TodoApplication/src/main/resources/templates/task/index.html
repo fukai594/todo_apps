@@ -89,7 +89,7 @@
               </table>
         </div>
 		<div>
-		    <span>ページ:</span>
+		    <span>Page</span>
 		    <a th:if="${page} > 0"
 			th:href="@{/task/list(page=${page - 1}, size=${size})}">前へ</a>
 		    <span th:text="${page} + 1"></span>

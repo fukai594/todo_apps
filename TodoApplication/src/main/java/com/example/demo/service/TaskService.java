@@ -61,7 +61,7 @@ public interface TaskService {
      */
     TaskForm convertToTaskForm(Task task);
     
-    List<Task> filterTask(CheckForm checkForm, String loginId);
+    List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable);
     
     Check convertToCheck(CheckForm checkForm);
     

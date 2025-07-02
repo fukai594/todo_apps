@@ -107,11 +107,13 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	public List<Task> filterTask(CheckForm checkForm, String loginId){
+	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable){
 		//変換処理
 		Check check = convertToCheck(checkForm);
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
 		
-		return taskRepository.filterTask(check, loginId);
+		return taskRepository.filterTask(check, loginId, limit, offset);
 	}
 	
 	/**

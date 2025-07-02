@@ -31,8 +31,12 @@ public class TaskServiceImpl implements TaskService{
 	 * @return List<Task> タスク一覧。
 	 */
 	@Override
-	public List<Task> findAll(String loginId) {
-		return taskRepository.findAll(loginId);
+	public List<Task> findAll(String loginId, Pageable pageable) {
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
+		System.out.println("limit" + limit);
+		System.out.println("offset" + offset);
+		return taskRepository.findAll(loginId, limit, offset);
 		}
 	
 	
@@ -170,17 +174,5 @@ public class TaskServiceImpl implements TaskService{
 		check.setCheckPriority3(checkForm.getCheckPriority3());
 		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
-	}
-	
-	//ページネーションを想定
-	public List<Task> findTaskbyPage(String loginId, Pageable pageable) {
-		int limit = pageable.getPageSize();
-		int offset = (int)pageable.getOffset();
-		
-		return taskRepository.findTaskbyPage(loginId, limit, offset);
-	}
-	
-	public int getAllTaskCount(String loginId){
-		return taskRepository.getAllTaskCount(loginId);
 	}
 }

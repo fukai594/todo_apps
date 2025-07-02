@@ -58,21 +58,15 @@ public class TaskController {
 		String loginId = getLoginId(loginUser);
 		//ページネーション
 		Pageable pageable = PageRequest.of(page, size);
-		List<Task>taskList = taskService.findTaskbyPage(loginId, pageable);
-		model.addAttribute("page",page);
-		model.addAttribute("size",size);
-		model.addAttribute("pageSize", taskList.size());
-		//タスクの一覧を取得
+		List<Task>taskList = taskService.findAll(loginId, pageable);
 	 	CheckForm checkForm = new CheckForm();
+
+	 	model.addAttribute("loginId", loginId);
+	 	model.addAttribute("page",page);
+	 	model.addAttribute("size",size);
+	 	model.addAttribute("pageSize", taskList.size());
 	 	model.addAttribute("checkForm", checkForm);
-	 	
-//		List<Task> taskList = taskService.findAll(loginId);		
 		model.addAttribute("taskList", taskList);
-		
-		//loginユーザーを表示する
-		model.addAttribute("loginId", loginId);
-		
-		
 		return "task/index";
 	}
 	

@@ -18,7 +18,7 @@ public interface TaskService {
      *
      * @return タスクのリスト
      */
-	List<Task> findAll(String loginId);
+	List<Task> findAll(String loginId, Pageable pageable);
 	
     /**
      * タスクを保存します。
@@ -64,9 +64,4 @@ public interface TaskService {
     List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable);
     
     Check convertToCheck(CheckForm checkForm);
-    
-    List<Task> findTaskbyPage(String loginId, Pageable pageable);
-    
-    int getAllTaskCount(String loginId);
-
 }

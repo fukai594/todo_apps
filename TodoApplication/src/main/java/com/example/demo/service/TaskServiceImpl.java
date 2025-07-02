@@ -34,8 +34,6 @@ public class TaskServiceImpl implements TaskService{
 	public List<Task> findAll(String loginId, Pageable pageable) {
 		int limit = pageable.getPageSize();
 		int offset = (int)pageable.getOffset();
-		System.out.println("limit" + limit);
-		System.out.println("offset" + offset);
 		return taskRepository.findAll(loginId, limit, offset);
 		}
 	

@@ -56,9 +56,8 @@
             <input type="hidden" name="updatedAt" th:value="*{updatedAt}">
             
             <button type="submit" class="btn btn-primary" value="submit">submit</button>
-            <a type="button" class="btn btn-outline-secondary" href="/task/list">back</a>
+            <a type="button" class="btn btn-outline-secondary" th:href="@{/task/list(page=${page}, size=${size})}">back</a>        
         </form>
-        
     </div>
 
     <footer class="py-3 my-4">

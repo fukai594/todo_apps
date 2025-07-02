@@ -35,3 +35,8 @@
     cursor: pointer;
     font: inherit;
 }
+.paging{
+	display: flex;
+	justify-content: center;
+	list-style-type: none;
+}

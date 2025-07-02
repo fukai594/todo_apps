@@ -54,5 +54,7 @@ public interface TaskMapper {
     
     List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId);
     
+    List<Task> findTaskbyPage(String loginId, int limit, int offset);
     
+    int getAllTaskCount(String loginId);
 }

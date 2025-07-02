@@ -1,6 +1,7 @@
 package com.example.demo.service;
-
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 
 import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
@@ -63,5 +64,9 @@ public interface TaskService {
     List<Task> filterTask(CheckForm checkForm, String loginId);
     
     Check convertToCheck(CheckForm checkForm);
+    
+    List<Task> findTaskbyPage(String loginId, Pageable pageable);
+    
+    int getAllTaskCount(String loginId);
 
 }

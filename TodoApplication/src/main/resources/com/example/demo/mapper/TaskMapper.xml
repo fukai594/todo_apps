@@ -22,10 +22,46 @@
     	 END AS message
         FROM task
 	WHERE deleteFlg = 0 and loginId=#{loginId}
-	ORDER BY priority DESC,deadline;
+	ORDER BY priority DESC,deadline
+	LIMIT 5 OFFSET 5 
         ]]>;
     </select>
-    
+
+	<!-- タスクの範囲指定 -->
+	<select id="findTaskbyPage" resultType="com.example.demo.entity.Task">
+        <![CDATA[
+	SELECT
+           taskid,
+	   title,
+	   description,
+	   deadline,
+	   status,
+	   progress,
+           priority,
+	   CASE
+             WHEN CURRENT_TIMESTAMP > deadline and status <> 3 THEN 1
+             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' > deadline and status <> 3 THEN 2
+           ELSE 0
+    	 END AS message
+        FROM task
+	WHERE deleteFlg = 0 and loginId=#{loginId}
+	ORDER BY priority DESC,deadline
+	LIMIT #{limit} OFFSET #{offset} 
+        ]]>;
+    </select>    
+
+	<!-- タスクの全件数取得 -->
+	<select id="getAllTaskCount" resultType="int">
+        <![CDATA[
+	SELECT
+           COUNT(*)
+        FROM task
+	WHERE deleteFlg = 0 and loginId=#{loginId}
+        ]]>;
+    </select>
+
+
+
     <!-- 新規タスクの登録 -->
     <insert id="save">
         INSERT INTO task

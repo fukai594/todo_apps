@@ -77,4 +77,11 @@ public class TaskRepository {
     public List<Task> filterTask(Check check, String loginId){
     	return taskMapper.filterTask(check, loginId);
     }
+    
+    public List<Task> findTaskbyPage(String loginId, int limit, int offset){
+    	return taskMapper.findTaskbyPage(loginId, limit, offset);
+    }
+    public int getAllTaskCount(String loginId) {
+    	return taskMapper.getAllTaskCount(loginId);
+    }
 }

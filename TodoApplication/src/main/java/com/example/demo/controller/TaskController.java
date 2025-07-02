@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,16 +48,30 @@ public class TaskController {
      * @return "task/index" - タスク一覧表示用のHTMLテンプレートのパス
      */
 	@RequestMapping(value = "/task/list", method = RequestMethod.GET)
-	public String showTask(Authentication loginUser, Model model) {
+	public String showTask(
+			Authentication loginUser,
+			Model model,
+			@RequestParam(defaultValue="0") int page,
+			@RequestParam(defaultValue="10") int size){
 		
 		//ログインしているユーザーのloginIdを取得
 		String loginId = getLoginId(loginUser);
 		
+		//全件数を取得
+		int taskAllCount = taskService.getAllTaskCount(loginId);
+		System.out.println(taskAllCount);
+		//ページネーション
+		Pageable pageable = PageRequest.of(page, size);
+		List<Task>taskList = taskService.findTaskbyPage(loginId, pageable);
+//		int allPageNum = taskService.getAllPageNum();
+		model.addAttribute("page",page);
+		model.addAttribute("size",size);
+		model.addAttribute("pageSize", taskList.size());
 		//タスクの一覧を取得
 	 	CheckForm checkForm = new CheckForm();
 	 	model.addAttribute("checkForm", checkForm);
 	 	
-		List<Task> taskList = taskService.findAll(loginId);		
+//		List<Task> taskList = taskService.findAll(loginId);		
 		model.addAttribute("taskList", taskList);
 		
 		//loginユーザーを表示する

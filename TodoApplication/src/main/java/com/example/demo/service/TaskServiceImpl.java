@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -167,5 +168,17 @@ public class TaskServiceImpl implements TaskService{
 		check.setCheckPriority3(checkForm.getCheckPriority3());
 		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
+	}
+	
+	//ページネーションを想定
+	public List<Task> findTaskbyPage(String loginId, Pageable pageable) {
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
+		
+		return taskRepository.findTaskbyPage(loginId, limit, offset);
+	}
+	
+	public int getAllTaskCount(String loginId){
+		return taskRepository.getAllTaskCount(loginId);
 	}
 }

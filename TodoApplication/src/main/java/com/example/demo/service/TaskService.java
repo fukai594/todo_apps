@@ -1,6 +1,7 @@
 package com.example.demo.service;
-
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 
 import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
@@ -17,7 +18,7 @@ public interface TaskService {
      *
      * @return タスクのリスト
      */
-	List<Task> findAll(String loginId);
+	List<Task> findAll(String loginId, Pageable pageable);
 	
     /**
      * タスクを保存します。
@@ -33,7 +34,7 @@ public interface TaskService {
      * @param taskId タスクID
      * @return タスクのフォームデータ
      */
-	TaskForm getTask(int taskId);
+	TaskForm getTask(int taskId, String loginId);
 	
     /**
      * タスクを削除します。
@@ -60,8 +61,7 @@ public interface TaskService {
      */
     TaskForm convertToTaskForm(Task task);
     
-    List<Task> filterTask(CheckForm checkForm, String loginId);
+    List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable);
     
     Check convertToCheck(CheckForm checkForm);
-
 }

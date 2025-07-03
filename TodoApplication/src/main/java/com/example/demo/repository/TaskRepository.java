@@ -31,8 +31,8 @@ public class TaskRepository {
      *
      * @return タスクのリスト
      */
-    public List<Task> findAll(String loginId) {
-        return taskMapper.findAll(loginId);
+    public List<Task> findAll(String loginId, int limit, int offset) {
+        return taskMapper.findAll(loginId, limit, offset);
     }
     
     /**
@@ -50,8 +50,8 @@ public class TaskRepository {
      * @param taskId タスクID
      * @return タスク
      */
-    public Task getTask(int taskId) {
-        return taskMapper.getTask(taskId);
+    public Task getTask(int taskId, String loginId) {
+        return taskMapper.getTask(taskId, loginId);
     }
 
     /**
@@ -74,7 +74,8 @@ public class TaskRepository {
         return taskMapper.delete(taskId);
     }
 
-    public List<Task> filterTask(Check check, String loginId){
-    	return taskMapper.filterTask(check, loginId);
+    public List<Task> filterTask(Check check, String loginId, int limit, int offset){
+    	return taskMapper.filterTask(check, loginId, limit, offset);
     }
+
 }

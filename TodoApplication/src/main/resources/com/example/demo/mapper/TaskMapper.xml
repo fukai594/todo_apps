@@ -22,11 +22,13 @@
     	 END AS message
         FROM task
 	WHERE deleteFlg = 0 and loginId=#{loginId}
-	ORDER BY priority DESC,deadline;
+
+	ORDER BY priority DESC,deadline
+	LIMIT #{limit} OFFSET #{offset}
         ]]>;
     </select>
-    
-    <!-- 新規タスクの登録 -->
+
+   <!-- 新規タスクの登録 -->
     <insert id="save">
         INSERT INTO task
             (title, description, deadline, status, progress, priority, loginId, created_at,updated_at, deleteFlg)
@@ -36,7 +38,7 @@
     
         <!-- タスクIDを指定してタスクを取得 -->
     <select id="getTask" resultType="com.example.demo.entity.Task">
-        SELECT * FROM task where taskId = #{taskId} and deleteFlg = 0;
+        SELECT * FROM task where taskId = #{taskId} and deleteFlg = 0 and loginId = #{loginId};
 	</select>
 	
 	   <!-- タスクの削除 -->
@@ -78,7 +80,8 @@
     	1=0
   	)
 	</if>
-	ORDER BY priority DESC,deadline;
+	ORDER BY priority DESC,deadline
+        LIMIT #{limit} OFFSET #{offset};
    </select>
 
 </mapper>

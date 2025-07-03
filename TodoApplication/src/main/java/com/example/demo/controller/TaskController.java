@@ -2,6 +2,10 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,9 +34,11 @@ import com.example.demo.service.TaskService;
 public class TaskController {
 
     private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
+    private HttpSession session;
+    
+    public TaskController(TaskService taskService, HttpSession session) {
         this.taskService = taskService;
+        this.session = session;
     }
     //ログイン中のユーザーのloginIdを取得
 	 private String getLoginId(Authentication loginUser) {
@@ -46,22 +52,29 @@ public class TaskController {
      * @return "task/index" - タスク一覧表示用のHTMLテンプレートのパス
      */
 	@RequestMapping(value = "/task/list", method = RequestMethod.GET)
-	public String showTask(Authentication loginUser, Model model) {
+	public String showTask(
+			Authentication loginUser,
+			Model model,
+			@RequestParam(defaultValue="0") int page,
+			@RequestParam(defaultValue="10") int size){
 		
 		//ログインしているユーザーのloginIdを取得
 		String loginId = getLoginId(loginUser);
-		
-		//タスクの一覧を取得
+		//ページネーション
+		Pageable pageable = PageRequest.of(page, size);
+		List<Task>taskList = taskService.findAll(loginId, pageable);
 	 	CheckForm checkForm = new CheckForm();
-	 	model.addAttribute("checkForm", checkForm);
+
+	 	this.session.setAttribute("page", page);
+	 	this.session.setAttribute("size", size);
 	 	
-		List<Task> taskList = taskService.findAll(loginId);		
+	 	model.addAttribute("loginId", loginId);
+	 	model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
+	 	model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
+	 	model.addAttribute("pageSize", taskList.size());
+	 	model.addAttribute("checkForm", checkForm);
 		model.addAttribute("taskList", taskList);
-		
-		//loginユーザーを表示する
-		model.addAttribute("loginId", loginId);
-		
-		
+
 		return "task/index";
 	}
 	
@@ -88,12 +101,22 @@ public class TaskController {
 	 * @return "task/edit" - タスク変更画面のHTMLテンプレートのパス
 	 */
 	@GetMapping(value = "/task/edit")
-	public String showEditForm(@RequestParam("taskId") int taskId,Model model) {
+	public String showEditForm(
+			@RequestParam("taskId") int taskId,
+			Model model,
+			Authentication loginUser) {
 		
 	    // タスクIDに基づいてタスクを取得
-		TaskForm taskForm = taskService.getTask(taskId);
-		
-		model.addAttribute("taskForm", taskForm);
+		String loginId = getLoginId(loginUser);
+		try {
+			TaskForm taskForm = taskService.getTask(taskId, loginId);
+			model.addAttribute("taskForm", taskForm);
+			model.addAttribute("page", this.session.getAttribute("page"));
+			model.addAttribute("size", this.session.getAttribute("size"));
+		}catch(NullPointerException | IllegalStateException ex) {
+			model.addAttribute("errorMessage", "不正なアクセスです。");
+		    return "task/systemError";
+		}				
 		return "task/edit";
 	}
 	
@@ -107,14 +130,23 @@ public class TaskController {
 	 * @return "task/confirm" - タスク確認画面のHTMLテンプレートのパス
 	 */
 	@GetMapping(value = "/task/confirm")
-	public String showConfirmForm(@Validated TaskForm taskForm, BindingResult bindingResult, Model model) {
+	public String showConfirmForm(
+			@Validated TaskForm taskForm,
+			BindingResult bindingResult,
+			Model model
+			) {
 		
 		// バリデーションチェックでエラーがある場合は変更画面に戻る
 		if (bindingResult.hasErrors()) {
 			return "task/edit";
 		}
-		
+		//先頭と末尾の空白を取り除く
+		taskForm.setTitle(taskForm.getTitle().strip());
+		taskForm.setDescription(taskForm.getDescription().strip());
+		model.addAttribute("page", this.session.getAttribute("page"));
+		model.addAttribute("size", this.session.getAttribute("size"));
 		model.addAttribute("taskForm", taskForm);
+		
 		return "task/confirm";
 	}
 	
@@ -143,7 +175,6 @@ public class TaskController {
 		}
 		//ログインIDをtaskFormにセットする
 		taskForm.setLoginId(getLoginId(loginUser));
-		//保存処理
 		String completeMessage =taskService.save(taskForm);
 		
 		//redirect先に値を渡す
@@ -170,11 +201,23 @@ public class TaskController {
 	 * @return "task/confirm" - タスク確認画面のHTMLテンプレートのパス
 	 */
 	@GetMapping(value = "/task/delete")
-	public String showDeleteForm(@RequestParam("taskId") int taskId, Model model) {
+	public String showDeleteForm(
+			@RequestParam("taskId") int taskId,
+			Model model,
+			Authentication loginUser
+	 ) {
 		
 	    // タスクIDに基づいてタスクを取得
-		TaskForm taskForm = taskService.getTask(taskId);
-		model.addAttribute("taskForm", taskForm);
+		String loginId = getLoginId(loginUser);
+		try {
+			TaskForm taskForm = taskService.getTask(taskId, loginId);
+			model.addAttribute("taskForm", taskForm);
+			model.addAttribute("page", this.session.getAttribute("page"));
+			model.addAttribute("size", this.session.getAttribute("size"));
+		}catch(NullPointerException | IllegalStateException ex) {
+			model.addAttribute("errorMessage", "不正なアクセスです。");
+		    return "task/systemError";
+		}
 		return "task/deleteConfirm";
 	}
 	
@@ -202,21 +245,37 @@ public class TaskController {
 	
 //	戻る機能
 	 @GetMapping("/task/back")
-	    public String backToEditPage(TaskForm taskForm,Model model) {
+	    public String backToEditPage(
+	    		TaskForm taskForm
+	    		,Model model
+	    		) {
 	    	model.addAttribute("taskForm", taskForm);
+	    	model.addAttribute("page", this.session.getAttribute("page"));
+	    	model.addAttribute("size", this.session.getAttribute("size"));
 	    	return "task/edit";
 	    }
 	
 //	 フィルター機能	
 	 @GetMapping(value = "/task/filter")
-		public String showFilter(@Validated CheckForm checkForm, BindingResult bindingResult, Model model, Authentication loginUser) {
+		public String showFilter(
+				@Validated CheckForm checkForm,
+				BindingResult bindingResult,
+				Model model,
+				Authentication loginUser,
+				@RequestParam(defaultValue="0") int page,
+				@RequestParam(defaultValue="10") int size) {
 			
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
 		 	}
-		 	
-		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser));
+			Pageable pageable = PageRequest.of(page, size);
+//			List<Task>taskList = taskService.findTaskbyPage(getLoginId(loginUser), pageable);
+			
+		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable);
 
+		 	model.addAttribute("page",page);
+		 	model.addAttribute("size",size);
+		 	model.addAttribute("pageSize", taskList.size());
 		 	model.addAttribute("taskList", taskList);
 			
 			return "task/index";

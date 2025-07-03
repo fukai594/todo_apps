@@ -66,7 +66,7 @@
             
             <!-- 送信ボタン -->
             <button type="submit" class="btn btn-primary" value="Confirm">Confirm</button>
-            <a type="button" class="btn btn-outline-secondary" th:href="@{/task/list}">back</a>
+            <a type="button" class="btn btn-outline-secondary" th:href="@{/task/list(page=${page}, size=${size})}">back</a>
           </form>
           
     </div>

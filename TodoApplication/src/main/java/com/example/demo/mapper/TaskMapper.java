@@ -19,7 +19,7 @@ public interface TaskMapper {
      *
      * @return タスクのリスト
      */
-    List<Task> findAll(String loginId);
+    List<Task> findAll(String loginId, int limit, int offset);
     
     /**
      * タスクを保存します。
@@ -34,7 +34,7 @@ public interface TaskMapper {
      * @param taskId タスクID
      * @return タスク
      */
-    Task getTask(int taskId);
+    Task getTask(int taskId, String loginId);
 
     /**
      * タスクを更新します。
@@ -52,7 +52,5 @@ public interface TaskMapper {
      */
     int delete(int taskId);
     
-    List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId);
-    
-    
+    List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId, int limit, int offset);
 }

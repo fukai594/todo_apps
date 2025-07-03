@@ -12,9 +12,8 @@ import jakarta.validation.constraints.Size;
 public class TaskForm {
 	// タスクID
 	private int taskId;
-	
-	// タイトルは1文字以上100文字以下
-	@Pattern(regexp="^[^\\s　].*$", message="スペースは使用できません")
+	//空白だけは許可せず、文字が含まれていれば許可する
+	@Pattern(regexp="^(?![\\s　]*$).+", message="スペースのみは入力できません")
 	@Size(min = 1, max = 100)
     private String title;
 	
@@ -24,6 +23,8 @@ public class TaskForm {
 	private int message;
 	
 	// 説明は最大200文字
+
+	@Pattern(regexp="^(?![\\s　]*$).+", message="スペースのみは入力できません")
 	@Size(max = 200)
     private String description;
     

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,10 @@ public class TaskServiceImpl implements TaskService{
 	 * @return List<Task> タスク一覧。
 	 */
 	@Override
-	public List<Task> findAll(String loginId) {
-		return taskRepository.findAll(loginId);
+	public List<Task> findAll(String loginId, Pageable pageable) {
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
+		return taskRepository.findAll(loginId, limit, offset);
 		}
 	
 	
@@ -75,10 +78,10 @@ public class TaskServiceImpl implements TaskService{
 	 * @return 対応するタスクフォーム
 	 */
 	@Override
-	public TaskForm getTask(int taskId) {
+	public TaskForm getTask(int taskId, String loginId) {
 		
 		//タスクを取得
-		Task task =taskRepository.getTask(taskId);
+		Task task =taskRepository.getTask(taskId, loginId);
 		
 		//変換処理
 		TaskForm taskForm =convertToTaskForm(task);
@@ -106,11 +109,13 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	public List<Task> filterTask(CheckForm checkForm, String loginId){
+	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable){
 		//変換処理
 		Check check = convertToCheck(checkForm);
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
 		
-		return taskRepository.filterTask(check, loginId);
+		return taskRepository.filterTask(check, loginId, limit, offset);
 	}
 	
 	/**

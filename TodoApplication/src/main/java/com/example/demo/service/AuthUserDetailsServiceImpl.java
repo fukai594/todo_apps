@@ -47,11 +47,11 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 	}
 	
 	@Transactional
-	public String edit(String loginId, String newLoginId) {
+	public String updateLoginId(String loginId, String newLoginId) {
 //		User user = convertToUser(userForm);
 //		String password = user.getPassword();
 //		user.setPassword(passwordEncoder.encode(password));
-		userRepository.edit(loginId, newLoginId);
+		userRepository.updateLoginId(loginId, newLoginId);
 		return Constants.USER_EDIT_COMPLETE;
 	}
 	@Transactional

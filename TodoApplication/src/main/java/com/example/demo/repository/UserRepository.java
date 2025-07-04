@@ -23,8 +23,8 @@ public class UserRepository {
 	public void register(User user) {
 		userMapper.register(user);
 	}
-	public void edit(String loginId, String newLoginId) {
-		userMapper.edit(loginId, newLoginId);
+	public void updateLoginId(String loginId, String newLoginId) {
+		userMapper.updateLoginId(loginId, newLoginId);
 	}
 	public User getUser(String loginId) {
 		return userMapper.getUser(loginId);

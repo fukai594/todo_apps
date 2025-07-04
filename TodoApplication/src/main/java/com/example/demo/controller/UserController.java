@@ -79,29 +79,29 @@ public class UserController {
 		return "/userInfo";
 	}
 	
-	@GetMapping("/edit")
-	public String edit(
+	@GetMapping("/editLoginId")
+	public String editLoginId(
 		UserLoginIdForm userLoginIdForm,
 		Model model
 		) {
 		//ログイン中のユーザーを取得
 		model.addAttribute("userLoginIdForm",userLoginIdForm);
-		return "/edit";
+		return "/editLoginId";
 	}
-	@PostMapping("/confirm")
-	public String confirm(
+	@PostMapping("/loginIdConfirm")
+	public String confirmLoginId(
 		@Validated UserLoginIdForm userLoginIdForm,
 		BindingResult bindingResult,
 		Model model){
 		// バリデーションチェックでエラーがある場合は変更画面に戻る
 		if (bindingResult.hasErrors()) {
-			return "/edit";
+			return "/editLoginId";
 		}
 		System.out.println("受信データ");
 		System.out.println("loginId"+ userLoginIdForm.getLoginId());
 		
 		model.addAttribute("userLoginForm",userLoginIdForm);
-		return "/confirm";
+		return "/loginIdConfirm";
 	}
 	
 	@PostMapping("/save")
@@ -112,18 +112,18 @@ public class UserController {
 			Authentication loginUser
 			) {
 		if(bindingResult.hasErrors()) {
-			return "/edit";
+			return "/editLoginId";
 		}
 		if(userDetailsService.isExistUser(userLoginIdForm.getLoginId())) {
 			model.addAttribute("userRegisterError","loginId:" + userLoginIdForm.getLoginId() + "は既に存在します。");
-			return "/edit";
+			return "/editLoginId";
 		}
 		try {
 			//ログイン中のユーザーを取得
 			System.out.println(userLoginIdForm.getLoginId());
 			System.out.println(getLoginId(loginUser));
 			//usersテーブルの更新
-			String completeMessage = userDetailsService.edit(getLoginId(loginUser), userLoginIdForm.getLoginId());
+			String completeMessage = userDetailsService.updateLoginId(getLoginId(loginUser), userLoginIdForm.getLoginId());
 			//taskテーブルの更新
 			taskService.updateLoginId(getLoginId(loginUser), userLoginIdForm.getLoginId());
 			model.addAttribute("completeMessage", completeMessage);

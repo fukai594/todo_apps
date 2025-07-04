@@ -18,7 +18,7 @@
 
         <h1>Form</h1>
 
-        <form class="px-4 pt-3 my-3" method="post" th:action="@{/confirm}" th:object="${userLoginIdForm}">
+        <form class="px-4 pt-3 my-3" method="post" th:action="@{/loginIdConfirm}" th:object="${userLoginIdForm}">
             <div class="form-group mb-3">
               <label>LoginId</label>
               <input type="text" class="form-control" placeholder="LoginId" name="loginId" th:field="*{loginId}">
@@ -26,7 +26,7 @@
             </div>
             <!-- 送信ボタン -->
             <button type="submit" class="btn btn-primary" value="Confirm">Confirm</button>
-            <a type="button" class="btn btn-outline-secondary" th:href="@{/task/list}">back</a>
+            <a type="button" class="btn btn-outline-secondary" th:href="@{/userInfo}">back</a>
           </form>
           
     </div>

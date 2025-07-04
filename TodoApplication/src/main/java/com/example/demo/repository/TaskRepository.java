@@ -73,7 +73,10 @@ public class TaskRepository {
     public int delete(int taskId) {
         return taskMapper.delete(taskId);
     }
-
+    
+    public void updateLoginId(String loginId, String newLoginId) {
+    	taskMapper.updateLoginId(loginId, newLoginId);
+    }
     public List<Task> filterTask(Check check, String loginId, int limit, int offset){
     	return taskMapper.filterTask(check, loginId, limit, offset);
     }

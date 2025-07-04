@@ -45,6 +45,23 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		
 		return Constants.USER_REGISTER_COMPLETE;
 	}
+	
+	@Transactional
+	public String edit(String loginId, String newLoginId) {
+//		User user = convertToUser(userForm);
+//		String password = user.getPassword();
+//		user.setPassword(passwordEncoder.encode(password));
+		userRepository.edit(loginId, newLoginId);
+		return Constants.USER_EDIT_COMPLETE;
+	}
+	@Transactional
+	public UserForm getUser(String loginId) {
+		User user = userRepository.getUser(loginId);
+		//パスワードをデコードして返却
+		return convertToUserForm(user);
+	}
+	
+	
 	public boolean isExistUser(String loginId) {//存在チェック
 		int count = userRepository.isExistUser(loginId);
 		if(count == 0) {
@@ -60,7 +77,16 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		user.setUserName(userForm.getUserName());
 		user.setLastLogin(userForm.getLastLogin());
 		user.setCreatedAt(userForm.getCreatedAt());
-		
 		return user;
+	}
+	public UserForm convertToUserForm(User user) {
+		UserForm userForm = new UserForm();
+		userForm.setUserNo(user.getUserNo());
+		userForm.setLoginId(user.getLoginId());
+		userForm.setPassword(user.getPassword());
+		userForm.setUserName(user.getUserName());
+		userForm.setLastLogin(user.getLastLogin());
+		userForm.setCreatedAt(user.getCreatedAt());
+		return userForm;
 	}
 }

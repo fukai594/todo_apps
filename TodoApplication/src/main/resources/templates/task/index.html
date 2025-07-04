@@ -11,6 +11,7 @@
 	<nav class="navigation navbar bg-body-tertiary">
 		<div class="user-info">
 			<span class="navbar-brand mb-0 h1" th:text="${loginId}">LoginId</span>
+			<a th:href="@{/userInfo}">UserEdit</a>
 			<form th:action="@{/logout}" method="post" style="display: inline;">
 				<button type="submit" class="link-button">Log out</button>
 			</form>

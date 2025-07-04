@@ -118,6 +118,9 @@ public class TaskServiceImpl implements TaskService{
 		return taskRepository.filterTask(check, loginId, limit, offset);
 	}
 	
+	public void updateLoginId(String loginId, String newLoginId) {
+		taskRepository.updateLoginId(loginId, newLoginId);
+	}
 	/**
 	 * タスクフォームをタスクエンティティに変換するメソッドです。
 	 *
@@ -173,4 +176,5 @@ public class TaskServiceImpl implements TaskService{
 		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
 	}
+
 }

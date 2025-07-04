@@ -53,4 +53,6 @@ public interface TaskMapper {
     int delete(int taskId);
     
     List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId, int limit, int offset);
+    
+    void updateLoginId(String loginId, String newLoginId);
 }

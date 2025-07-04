@@ -51,6 +51,11 @@
 	   UPDATE task SET title = #{title}, description = #{description},deadline = #{deadline},status = #{status}, progress = #{progress}, priority = #{priority}, updated_at = CURRENT_TIMESTAMP WHERE taskId = #{taskId} and updated_at = #{updatedAt}; 
    </update>
     
+<!-- loginId更新 -->
+   <update id="updateLoginId">
+	   UPDATE task SET loginId=#{newLoginId} ,updated_at = CURRENT_TIMESTAMP WHERE loginId=#{loginId}; 
+   </update>
+
 <!-- Taskのフィルタリング -->
   <select id="filterTask" resultType="com.example.demo.entity.Task">
     	SELECT

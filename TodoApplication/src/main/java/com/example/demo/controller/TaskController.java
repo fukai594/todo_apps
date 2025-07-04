@@ -43,7 +43,7 @@ public class TaskController {
     //ログイン中のユーザーのloginIdを取得
 	 private String getLoginId(Authentication loginUser) {
 		 AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-		 return userDetails.getUser().getLoginId();	 
+		 return userDetails.getUser().getLoginId(); 
 	 }
     /**
      * タスクの一覧を表示するメソッドです。

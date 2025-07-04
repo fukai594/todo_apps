@@ -44,7 +44,7 @@ public interface TaskService {
      */
 	String delete(int taskId);
 	
-	
+	void updateLoginId(String loginId, String newLoginId);
     /**
      * タスクのフォームデータをタスクエンティティに変換します。
      *

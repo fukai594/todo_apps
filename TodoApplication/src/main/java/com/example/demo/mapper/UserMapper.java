@@ -9,4 +9,6 @@ public interface UserMapper {
 	User findByLoginId(String loginId);
 	int isExistUser(String loginId);
 	void register(User user);
+	void edit(String loginId, String newLoginId);
+	User getUser(String loginId);
 }

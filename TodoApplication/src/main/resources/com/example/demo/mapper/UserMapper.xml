@@ -33,4 +33,15 @@
         ,CURRENT_TIMESTAMP
         );
     </insert>
+    <select id="getUser" resultType="com.example.demo.entity.User">
+       SELECT * FROM users where loginId=#{loginId};
+    </select>
+
+    <update id="edit">
+        UPDATE users
+        SET
+        loginId=#{newLoginId}
+        , createdAt=CURRENT_TIMESTAMP
+	where loginId=#{loginId}
+    </update>
 </mapper>

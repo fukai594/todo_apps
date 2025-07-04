@@ -19,26 +19,34 @@
         <h1>UserInfo</h1>
 
         <div class="px-4 pt-3 my-3">
-			<form th:action="@{/editLoginId}" method="get" th:object="${userForm}" class="px-4 pt-3 my-3">
-	            <div class="mb-3">
-	                <label>LoginId</label>
-	                <span th:text="*{loginId}" th:value="*{loginId}">loginId</span>
-					<button type="submit" class="btn btn-primary" value="edit">edit</button>
-	            </div>
-			</form>
-			<form th:action="@{/editPassword}" method="get" class="px-4 pt-3 my-3">
-	            <div class="mb-3">
-	                <span>Password</span>
-					<button type="submit" class="btn btn-primary" value="edit">edit</button>
-	            </div>
-			</form>
-			<form th:action="@{/editUserName}" method="get" class="px-4 pt-3 my-3">
-	            <div class="mb-3">
-	                <label>UserName</label>
-	                <span th:text="${userForm.userName}">userName</span>
-					<button type="submit" class="btn btn-primary" value="edit">edit</button>
-	            </div>
-			</form>
+			<ul>
+				<li>
+					<form th:action="@{/editLoginId}" method="get" th:object="${userForm}" class="px-4 pt-3 my-3">
+			            <div class="mb-3">
+			                <label>LoginId: </label>
+			                <span th:text="*{loginId}" th:value="*{loginId}">loginId</span>
+							<button type="submit" class="btn btn-primary" value="edit">edit</button>
+			            </div>
+					</form>
+				</li>
+				<li>
+					<form th:action="@{/editPassword}" method="get" class="px-4 pt-3 my-3">
+			            <div class="mb-3">
+			                <span>Password</span>
+							<button type="submit" class="btn btn-primary" value="edit">edit</button>
+			            </div>
+					</form>
+				</li>
+				<li>
+					<form th:action="@{/editUserName}" method="get" class="px-4 pt-3 my-3">
+			            <div class="mb-3">
+			                <label>UserName: </label>
+			                <span th:text="${userForm.userName}">userName</span>
+							<button type="submit" class="btn btn-primary" value="edit">edit</button>
+			            </div>
+					</form>
+				</li>
+			</ul>
 			<div class="d-flex justify-content-start">
 				<a type="button" class="btn btn-outline-secondary" th:href="@{/task/list}">back</a>
 			</div>

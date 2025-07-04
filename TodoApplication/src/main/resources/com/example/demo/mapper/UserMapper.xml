@@ -44,4 +44,18 @@
         , createdAt=CURRENT_TIMESTAMP
 	where loginId=#{loginId}
     </update>
+    <update id="updatePassword">
+        UPDATE users
+        SET
+        password=#{password}
+        , createdAt=CURRENT_TIMESTAMP
+	where loginId=#{loginId}
+    </update>
+    <update id="updateUserName">
+        UPDATE users
+        SET
+        userName=#{userName}
+        , createdAt=CURRENT_TIMESTAMP
+	where loginId=#{loginId}
+    </update>
 </mapper>

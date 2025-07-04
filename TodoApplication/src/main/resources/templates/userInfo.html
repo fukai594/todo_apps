@@ -26,23 +26,23 @@
 					<button type="submit" class="btn btn-primary" value="edit">edit</button>
 	            </div>
 			</form>
-			<form th:action="@{/edit}" method="get" th:object="${userForm}" class="px-4 pt-3 my-3">
+			<form th:action="@{/editPassword}" method="get" class="px-4 pt-3 my-3">
 	            <div class="mb-3">
 	                <span>Password</span>
-					<a type="button" class="btn btn-primary" th:href="@{/edit}">edit</a>
+					<button type="submit" class="btn btn-primary" value="edit">edit</button>
 	            </div>
 			</form>
-			<form th:action="@{/confirm}" method="get" th:object="${userForm}" class="px-4 pt-3 my-3">
+			<form th:action="@{/editUserName}" method="get" class="px-4 pt-3 my-3">
 	            <div class="mb-3">
 	                <label>UserName</label>
 	                <span th:text="${userForm.userName}">userName</span>
-					<a type="button" class="btn btn-primary" th:href="@{/edit}">edit</a>
+					<button type="submit" class="btn btn-primary" value="edit">edit</button>
 	            </div>
 			</form>
+			<div class="d-flex justify-content-start">
+				<a type="button" class="btn btn-outline-secondary" th:href="@{/task/list}">back</a>
+			</div>
         </div>
-		<div class="d-flex justify-content-start">
-			<a type="button" class="btn btn-outline-secondary" th:href="@{/task/list}">back</a>
-		</div>
 	</div>
 
     <footer class="py-3 my-4">

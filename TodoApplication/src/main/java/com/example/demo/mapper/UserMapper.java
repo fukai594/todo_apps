@@ -10,5 +10,7 @@ public interface UserMapper {
 	int isExistUser(String loginId);
 	void register(User user);
 	void updateLoginId(String loginId, String newLoginId);
+	void updatePassword(String loginId, String password);
+	void updateUserName(String loginId, String userName);
 	User getUser(String loginId);
 }

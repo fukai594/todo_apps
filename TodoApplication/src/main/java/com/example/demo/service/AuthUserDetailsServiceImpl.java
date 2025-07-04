@@ -39,7 +39,6 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		//パスワードのエンコード
 		String password = user.getPassword();
 		user.setPassword(passwordEncoder.encode(password));
-		
 		//変更処理の場合の記述も実装予定
 		userRepository.register(user);
 		
@@ -52,6 +51,17 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 //		String password = user.getPassword();
 //		user.setPassword(passwordEncoder.encode(password));
 		userRepository.updateLoginId(loginId, newLoginId);
+		return Constants.USER_EDIT_COMPLETE;
+	}
+	
+	@Transactional
+	public String updatePassword(String loginId, String password) {
+		userRepository.updatePassword(loginId, passwordEncoder.encode(password));
+		return Constants.USER_EDIT_COMPLETE;
+	}
+	@Transactional
+	public String updateUserName(String loginId, String userName) {
+		userRepository.updateUserName(loginId, userName);
 		return Constants.USER_EDIT_COMPLETE;
 	}
 	@Transactional

@@ -2,6 +2,7 @@ package com.example.demo.form;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -14,7 +15,15 @@ public class SearchForm {
 	private LocalDate startDate;
 
 	private LocalDate endDate;
-
+	
+//	開始日と終了日の比較。同日でもよい
+	@AssertTrue(message="開始日は終了日より前または同日にしてください")
+	public boolean isDateValid() {
+		if(startDate == null)return false;
+		if(startDate.isAfter(endDate)) return false;
+		return true;
+	}
+	
 	public String getSearchWords() {
 		return searchWords;
 	}

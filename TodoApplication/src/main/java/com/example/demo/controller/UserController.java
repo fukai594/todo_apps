@@ -125,22 +125,7 @@ public class UserController {
 		model.addAttribute("userLoginForm",userLoginIdForm);
 		return "/loginIdConfirm";
 	}
-	@PostMapping("/passwordConfirm")
-	public String passwordConfirm(
-		@Validated UserPasswordForm userPasswordForm,
-		BindingResult bindingResult,
-		Model model){
-		// バリデーションチェックでエラーがある場合は変更画面に戻る
-		if (bindingResult.hasErrors()) {
-			return "/editPassword";
-		}
-		System.out.println("受信データ");
-		System.out.println("Password"+ userPasswordForm.getPassword());
-		
-		model.addAttribute("userPasswordForm",userPasswordForm);
-		return "/passwordConfirm";
-	}
-	
+
 	@PostMapping("/userNameConfirm")
 	public String userNameConfirm(
 		@Validated UserNameForm userNameForm,

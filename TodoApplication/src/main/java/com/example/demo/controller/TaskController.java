@@ -268,6 +268,8 @@ public class TaskController {
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
 		 	}
+		 	//pageのセッションを再定義
+		 	this.session.setAttribute("page",0);
 //		 	PageRequest.ofの引数がint,intのため変換処理
 			Pageable pageable = PageRequest.of(Integer.parseInt(this.session.getAttribute("page").toString()), Integer.parseInt(this.session.getAttribute("size").toString()));
 
@@ -288,7 +290,7 @@ public class TaskController {
 		     Model model,
 		     Authentication loginUser,
 		     @RequestParam(defaultValue="0") int page,
-		     @RequestParam(defaultValue="0") int size		     
+		     @RequestParam(defaultValue="10") int size		     
 	     ) {
 		 if(bindingResult.hasErrors()) {
 			 return "task/index";

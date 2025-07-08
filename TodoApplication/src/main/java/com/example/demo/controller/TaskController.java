@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.auth.AuthUserDetails;
 import com.example.demo.entity.Task;
 import com.example.demo.form.CheckForm;
+import com.example.demo.form.SearchItemForm;
 import com.example.demo.form.TaskForm;
 import com.example.demo.service.TaskService;
 
@@ -261,23 +262,46 @@ public class TaskController {
 				@Validated CheckForm checkForm,
 				BindingResult bindingResult,
 				Model model,
-				Authentication loginUser,
-				@RequestParam(defaultValue="0") int page,
-				@RequestParam(defaultValue="10") int size) {
+				Authentication loginUser
+				) {
 			
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
 		 	}
-			Pageable pageable = PageRequest.of(page, size);
-//			List<Task>taskList = taskService.findTaskbyPage(getLoginId(loginUser), pageable);
-			
+//		 	PageRequest.ofの引数がint,intのため変換処理
+			Pageable pageable = PageRequest.of(Integer.parseInt(this.session.getAttribute("page").toString()), Integer.parseInt(this.session.getAttribute("size").toString()));
+
 		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable);
 
-		 	model.addAttribute("page",page);
-		 	model.addAttribute("size",size);
+		 	model.addAttribute("page",this.session.getAttribute("page"));
+		 	model.addAttribute("size",this.session.getAttribute("size"));
 		 	model.addAttribute("pageSize", taskList.size());
 		 	model.addAttribute("taskList", taskList);
 			
 			return "task/index";
 		}
+//	検索機能
+	 @GetMapping(value="task/search")
+	 public String searchTasks(
+		     @Validated SearchItemForm searchItemForm,
+		     BindingResult bindingResult,
+		     Model model,
+		     Authentication loginUser,
+		     @RequestParam(defaultValue="0") int page,
+		     @RequestParam(defaultValue="0") int size		     
+	     ) {
+		 if(bindingResult.hasErrors()) {
+			 return "task/index";
+		 }
+		 Pageable pageable = PageRequest.of(page, size);
+		 List<Task> taskList = taskService.searchTasks(searchItemForm, getLoginId(loginUser), pageable);
+		 List<String> searchHistory = taskService.addSearchHistory(searchItemForm.getSearchWords());
+		 
+		 model.addAttribute("page", page);
+		 model.addAttribute("size", size);
+		 model.addAttribute("pageSize", taskList.size());
+		 model.addAttribute("taskList", taskList);
+		 model.addAttribute("searchHistory", searchHistory);
+		 return "task/index";
+	 }
 }

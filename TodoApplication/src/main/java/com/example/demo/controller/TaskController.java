@@ -65,7 +65,7 @@ public class TaskController {
 		Pageable pageable = PageRequest.of(page, size);
 		List<Task>taskList = taskService.findAll(loginId, pageable);
 	 	CheckForm checkForm = new CheckForm();
-
+//	 	session:page,sizeの値を設定
 	 	this.session.setAttribute("page", page);
 	 	this.session.setAttribute("size", size);
 	 	
@@ -75,6 +75,7 @@ public class TaskController {
 	 	model.addAttribute("pageSize", taskList.size());
 	 	model.addAttribute("checkForm", checkForm);
 		model.addAttribute("taskList", taskList);
+		model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
 
 		return "task/index";
 	}
@@ -232,7 +233,11 @@ public class TaskController {
 	 * @return "redirect:/task/complete" - タスク確認画面へのリダイレクト
 	 */
 	@PostMapping(value = "/task/delete")
-	public String deleteTask(@RequestParam("taskId") int taskId, RedirectAttributes redirectAttributes,Model model) {
+	public String deleteTask(
+			@RequestParam("taskId") int taskId,
+			RedirectAttributes redirectAttributes,
+			Model model
+		) {
 		
 		//保存処理
 		String completeMessage =taskService.delete(taskId);
@@ -268,10 +273,13 @@ public class TaskController {
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
 		 	}
-		 	//pageのセッションを再定義
+		 	//session:pageの値を再設定
 		 	this.session.setAttribute("page",0);
 //		 	PageRequest.ofの引数がint,intのため変換処理
-			Pageable pageable = PageRequest.of(Integer.parseInt(this.session.getAttribute("page").toString()), Integer.parseInt(this.session.getAttribute("size").toString()));
+			Pageable pageable = PageRequest.of(
+					Integer.parseInt(this.session.getAttribute("page").toString()),
+					Integer.parseInt(this.session.getAttribute("size").toString())
+					);
 
 		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable);
 
@@ -288,22 +296,29 @@ public class TaskController {
 		     @Validated SearchItemForm searchItemForm,
 		     BindingResult bindingResult,
 		     Model model,
-		     Authentication loginUser,
-		     @RequestParam(defaultValue="0") int page,
-		     @RequestParam(defaultValue="10") int size		     
+		     Authentication loginUser	     
 	     ) {
 		 if(bindingResult.hasErrors()) {
 			 return "task/index";
 		 }
-		 Pageable pageable = PageRequest.of(page, size);
-		 List<Task> taskList = taskService.searchTasks(searchItemForm, getLoginId(loginUser), pageable);
-		 List<String> searchHistory = taskService.addSearchHistory(searchItemForm.getSearchWords());
 		 
-		 model.addAttribute("page", page);
-		 model.addAttribute("size", size);
+		//session:pageの値を再設定
+		 	this.session.setAttribute("page",0);
+//		 	PageRequest.ofの引数がint,intのため変換処理
+		 Pageable pageable = PageRequest.of(
+				 Integer.parseInt(this.session.getAttribute("page").toString()),
+				 Integer.parseInt(this.session.getAttribute("size").toString())
+				 );
+		 List<Task> taskList = taskService.searchTasks(searchItemForm, getLoginId(loginUser), pageable);
+		 //session:searchHistoryの値を設定
+		 List<String> searchHistory = taskService.addSearchHistory(searchItemForm.getSearchWords());
+		 this.session.setAttribute("searchHistory", searchHistory);
+		 
+		 model.addAttribute("page", this.session.getAttribute("page"));
+		 model.addAttribute("size", this.session.getAttribute("size"));
 		 model.addAttribute("pageSize", taskList.size());
 		 model.addAttribute("taskList", taskList);
-		 model.addAttribute("searchHistory", searchHistory);
+		 model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
 		 return "task/index";
 	 }
 }

@@ -33,13 +33,13 @@
 				<br/>
 				<label>deadline:</label>
 				<input
-				  type="date"
+				  type="datetime-local"
 				  name="startDate"
 				  th:value="*{startDate}"
 				  />
 				 <span>～</span>
 				 <input
-				  type="date"
+				  type="datetime-local"
 				  id="endDate"
 				  name="endDate"
 				  th:value="*{endDate}"
@@ -47,13 +47,7 @@
 				  <p th:if="${#fields.hasErrors('dateValid')}" th:errors="*{dateValid}" class="text-danger"></p>
 				<button type="submit" class="btn btn-primary me-3" value="submit">search</button>
 			</form>
-			<div class="search-history" th:if="searchHistory">
-			    <div th:each="item : ${searchHistory}">
-					<div th:each="word : ${item}">
-						<span th:text="${word}"></span>
-					</div>
-			    </div>
-			</div>
+			
 		</div>
 		<div class="filter-container">
 			<form method="get" th:action="@{/task/filter}" th:object="${checkForm}">

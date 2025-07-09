@@ -357,4 +357,34 @@ public class TaskController {
 		 model.addAttribute("searchHistory", history);
 		 return "task/index";
 	 }
+	 
+	 @GetMapping(value="task/searchHisory")
+	 public String searchTasksByHistory(
+	       @RequestParam int historyNumber,
+	       Model model,
+		   Authentication loginUser
+	    ) {
+		 String loginId = getLoginId(loginUser);
+		//ページネーション
+	    Pageable pageable = PageRequest.of(
+			 Integer.parseInt(this.session.getAttribute("page").toString()),
+			 Integer.parseInt(this.session.getAttribute("size").toString())
+			 );
+		List<Task>taskList = taskService.findAll(loginId, pageable);
+		SearchItemForm searchItemForm = new SearchItemForm();
+		CheckForm checkForm = new CheckForm();
+		System.out.println(this.session.getAttribute("searchHistory"));
+	 	model.addAttribute("loginId", loginId);
+	 	model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
+	 	model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
+	 	model.addAttribute("pageSize", taskList.size());
+	 	model.addAttribute("checkForm", checkForm);
+	 	model.addAttribute("searchItemForm", searchItemForm);
+		model.addAttribute("taskList", taskList);
+		model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
+		 List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
+		 //historyは0番目から始まる
+		 System.out.println(history.get(0));
+		 return "task/index";
+	 }
 }

@@ -103,11 +103,22 @@
            ELSE 0
        END AS message
        FROM task
-	WHERE deleteFlg=0 and loginId=#{loginId} 
-       AND 
+	<where>
+	deleteFlg=0
+	AND loginId=#{loginId}
+       <if test="searchItem.searchWordsList != null">
+       AND
 	     <foreach item="searchWord" open="(" separator="OR" close=")" collection="searchItem.searchWordsList">
   	       title ILIKE '%' || #{searchWord} || '%' OR description ILIKE '%' || #{searchWord} || '%'
 	     </foreach>
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate == null">
+	     AND deadline &gt; #{searchItem.startDate}
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate != null">
+	     AND deadline BETWEEN #{searchItem.startDate} AND #{searchItem.endDate}
+	   </if>
+	</where>
 	ORDER BY priority DESC,deadline
     LIMIT #{limit} OFFSET #{offset};
    </select>

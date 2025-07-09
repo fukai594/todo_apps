@@ -106,7 +106,7 @@
 	WHERE deleteFlg=0 and loginId=#{loginId} 
        AND 
 	     <foreach item="searchWord" open="(" separator="OR" close=")" collection="searchItem.searchWordsList">
-  	       title ILIKE '%' || #{searchWord} || '%'
+  	       title ILIKE '%' || #{searchWord} || '%' OR description ILIKE '%' || #{searchWord} || '%'
 	     </foreach>
 	ORDER BY priority DESC,deadline
     LIMIT #{limit} OFFSET #{offset};

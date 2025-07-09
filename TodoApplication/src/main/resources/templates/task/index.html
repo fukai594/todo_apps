@@ -17,15 +17,44 @@
 			</form>
 		</div>		
 	</nav>
-		<li class="container">
-		        <div class="px-4 pt-3 my-3 text-center border-bottom">
-		            <h1 class="display-4 fw-bold text-body-emphasis mb-3">ToDo Application</h1>
-		            <div class="col-lg-6 mx-auto">
-		              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-		                <a type="button" class="btn btn-primary btn-lg px-4 me-sm-3" th:href="@{/task/add}">create</a>
-		              </div>
-		            </div>
-		        </div>
+	<div class="container">
+        <div class="px-4 pt-3 my-3 text-center border-bottom">
+            <h1 class="display-4 fw-bold text-body-emphasis mb-3">ToDo Application</h1>
+            <div class="col-lg-6 mx-auto">
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                <a type="button" class="btn btn-primary btn-lg px-4 me-sm-3" th:href="@{/task/add}">create</a>
+              </div>
+            </div>
+        </div>
+		<div class="px-4 pt-2 my-3 text-center">
+			<form method="get"th:action="@{/task/search}" th:object="${searchItemForm}">
+				<input type="text" placeholder="title or description" th:field=*{searchWords}/>
+				<div th:if="${#fields.hasErrors('searchWords')}" th:errors="*{searchWords}" class="text-danger"></div>
+				<br/>
+				<label>deadline:</label>
+				<input
+				  type="date"
+				  name="startDate"
+				  th:value="*{startDate}"
+				  />
+				 <span>～</span>
+				 <input
+				  type="date"
+				  id="endDate"
+				  name="endDate"
+				  th:value="*{endDate}"
+				  />
+				  <p th:if="${#fields.hasErrors('dateValid')}" th:errors="*{dateValid}" class="text-danger"></p>
+				<button type="submit" class="btn btn-primary me-3" value="submit">search</button>
+			</form>
+			<div class="search-history" th:if="searchHistory">
+			    <div th:each="item : ${searchHistory}">
+					<div th:each="word : ${item}">
+						<span th:text="${word}"></span>
+					</div>
+			    </div>
+			</div>
+		</div>
 		<div class="filter-container">
 			<form method="get" th:action="@{/task/filter}" th:object="${checkForm}">
 				<div class="form-items">

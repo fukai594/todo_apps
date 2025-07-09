@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Check;
+import com.example.demo.entity.SearchItem;
 import com.example.demo.entity.Task;
 import com.example.demo.mapper.TaskMapper;
 
@@ -80,5 +81,8 @@ public class TaskRepository {
     public List<Task> filterTask(Check check, String loginId, int limit, int offset){
     	return taskMapper.filterTask(check, loginId, limit, offset);
     }
-
+    
+    public List<Task> searchTasks(SearchItem searchItem,String loginId, int limit, int offset){
+    	return taskMapper.searchTasks(searchItem, loginId, limit, offset);
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import com.example.demo.entity.Check;
 import com.example.demo.entity.Task;
 import com.example.demo.form.CheckForm;
+import com.example.demo.form.SearchItemForm;
 import com.example.demo.form.TaskForm;
 
 /**
@@ -45,6 +46,13 @@ public interface TaskService {
 	String delete(int taskId);
 	
 	void updateLoginId(String loginId, String newLoginId);
+	
+	List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable);
+	
+	List<Task> searchTasks(SearchItemForm searchItemForm, String loginId, Pageable pageable);
+	
+	//検索履歴の管理
+	List<String[]> addSearchHistory(String searchWords, List<String[]> searchHistory);
     /**
      * タスクのフォームデータをタスクエンティティに変換します。
      *
@@ -60,8 +68,5 @@ public interface TaskService {
      * @return タスクのフォームデータ
      */
     TaskForm convertToTaskForm(Task task);
-    
-    List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable);
-    
     Check convertToCheck(CheckForm checkForm);
 }

@@ -8,21 +8,20 @@
 	<select id="findAll" resultType="com.example.demo.entity.Task">
         <![CDATA[
 	SELECT
-           taskid,
+       taskid,
 	   title,
 	   description,
 	   deadline,
 	   status,
 	   progress,
-           priority,
+       priority,
 	   CASE
              WHEN CURRENT_TIMESTAMP > deadline and status <> 3 THEN 1
              WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' > deadline and status <> 3 THEN 2
            ELSE 0
-    	 END AS message
-        FROM task
+       END AS message
+       FROM task
 	WHERE deleteFlg = 0 and loginId=#{loginId}
-
 	ORDER BY priority DESC,deadline
 	LIMIT #{limit} OFFSET #{offset}
         ]]>;
@@ -58,14 +57,14 @@
 
 <!-- Taskのフィルタリング -->
   <select id="filterTask" resultType="com.example.demo.entity.Task">
-    	SELECT
+    SELECT
 	   taskid,
 	   title,
 	   description,
 	   deadline,
 	   status,
 	   progress,
-       	   priority,
+       priority,
 	   CASE
              WHEN CURRENT_TIMESTAMP &gt; deadline and status != 3 THEN 1
              WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' &gt; deadline and status != 3 THEN 2
@@ -88,5 +87,28 @@
 	ORDER BY priority DESC,deadline
         LIMIT #{limit} OFFSET #{offset};
    </select>
-
+<!-- Taskの検索-->
+  <select id="searchTasks" resultType="com.example.demo.entity.Task">
+    SELECT
+	   taskid,
+	   title,
+	   description,
+	   deadline,
+	   status,
+	   progress,
+       priority,
+	   CASE
+             WHEN CURRENT_TIMESTAMP &gt; deadline and status != 3 THEN 1
+             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' &gt; deadline and status != 3 THEN 2
+           ELSE 0
+       END AS message
+       FROM task
+	WHERE deleteFlg=0 and loginId=#{loginId} 
+       AND 
+	     <foreach item="searchWord" open="(" separator="OR" close=")" collection="searchItem.searchWordsList">
+  	       title ILIKE '%' || #{searchWord} || '%'
+	     </foreach>
+	ORDER BY priority DESC,deadline
+    LIMIT #{limit} OFFSET #{offset};
+   </select>
 </mapper>

@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.common.Constants;
 import com.example.demo.entity.Check;
+import com.example.demo.entity.SearchItem;
 import com.example.demo.entity.Task;
 import com.example.demo.form.CheckForm;
+import com.example.demo.form.SearchItemForm;
 import com.example.demo.form.TaskForm;
 import com.example.demo.repository.TaskRepository;
 
@@ -121,7 +123,40 @@ public class TaskServiceImpl implements TaskService{
 	public void updateLoginId(String loginId, String newLoginId) {
 		taskRepository.updateLoginId(loginId, newLoginId);
 	}
-	/**
+	
+	 //サービスクラスで複数検索に対するスペース区切りの文字分割の処理を行う
+	public List<Task> searchTasks(
+			SearchItemForm searchItemForm
+			,String loginId
+			,Pageable pageable){
+		//複数検索の場合を考慮し、配列にする
+		SearchItem searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));
+		System.out.println(searchItem.getSearchWordsList()[0]);
+		System.out.println(searchItem.getStartDate());
+		System.out.println(searchItem.getEndDate());
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
+		return taskRepository.searchTasks(searchItem,loginId, limit, offset);
+	}
+	private String[] splitWordsToList(String searchWords) {
+		return searchWords.split("\\s|　+");
+	}
+//	検索履歴に追加する
+	public List<String[]> addSearchHistory(
+			String searchWords
+			,List<String[]> searchHistory
+			){
+		 String[] newSearchWords = splitWordsToList(searchWords);
+		 //履歴が5件以上あれば、もっとも古い履歴を削除する
+		 System.out.println(searchHistory.size());
+		 if(searchHistory.size() > 4) {//sizeの初期は0
+			 searchHistory.remove(0);
+		 }
+		 searchHistory.add(newSearchWords);
+		 //最新履歴を追加する
+		 return searchHistory;
+	}
+	/**s
 	 * タスクフォームをタスクエンティティに変換するメソッドです。
 	 *
 	 * @param taskForm タスクフォーム
@@ -175,6 +210,14 @@ public class TaskServiceImpl implements TaskService{
 		check.setCheckPriority3(checkForm.getCheckPriority3());
 		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
+	}
+	
+	public SearchItem convertToSearchItem(SearchItemForm searchItemForm, String[] searchWordsList) {
+		SearchItem searchItem = new SearchItem();
+		searchItem.setSearchWordsList(searchWordsList);
+		searchItem.setStartDate(searchItemForm.getStartDate());
+		searchItem.setEndDate(searchItemForm.getEndDate());
+		return searchItem;
 	}
 
 }

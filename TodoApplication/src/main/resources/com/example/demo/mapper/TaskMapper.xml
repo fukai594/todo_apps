@@ -84,6 +84,18 @@
     	1=0
   	)
 	</if>
+	<if test="searchItem.searchWordsList != null">
+       AND
+	     <foreach item="searchWord" open="(" separator="OR" close=")" collection="searchItem.searchWordsList">
+  	       title ILIKE '%' || #{searchWord} || '%' OR description ILIKE '%' || #{searchWord} || '%'
+	     </foreach>
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate == null">
+	     AND deadline &gt; #{searchItem.startDate}
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate != null">
+	     AND deadline BETWEEN #{searchItem.startDate} AND #{searchItem.endDate}
+	</if>
 	ORDER BY priority DESC,deadline
         LIMIT #{limit} OFFSET #{offset};
    </select>

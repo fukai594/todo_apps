@@ -78,8 +78,8 @@ public class TaskRepository {
     public void updateLoginId(String loginId, String newLoginId) {
     	taskMapper.updateLoginId(loginId, newLoginId);
     }
-    public List<Task> filterTask(Check check, String loginId, int limit, int offset){
-    	return taskMapper.filterTask(check, loginId, limit, offset);
+    public List<Task> filterTask(Check check, String loginId, int limit, int offset,SearchItem searchItem){
+    	return taskMapper.filterTask(check, loginId, limit, offset, searchItem);
     }
     
     public List<Task> searchTasks(SearchItem searchItem,String loginId, int limit, int offset){

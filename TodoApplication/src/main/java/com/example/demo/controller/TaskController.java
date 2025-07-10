@@ -283,9 +283,13 @@ public class TaskController {
 					Integer.parseInt(this.session.getAttribute("page").toString()),
 					Integer.parseInt(this.session.getAttribute("size").toString())
 					);
+			//searchで検索したのち、絞り込み検索する場合を考慮し、searchFormを引数にとる
+			SearchItemForm searchItemForm = (SearchItemForm)this.session.getAttribute("searchItemForm");
+		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable,searchItemForm);
+		 	
 
-		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable);
-
+		 	model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
+		 	model.addAttribute("searchItemForm", searchItemForm);
 		 	model.addAttribute("page",this.session.getAttribute("page"));
 		 	model.addAttribute("size",this.session.getAttribute("size"));
 		 	model.addAttribute("pageSize", taskList.size());
@@ -346,9 +350,11 @@ public class TaskController {
 			);
 		 
 		 this.session.setAttribute("searchHistory", newSearchHistory);
-		 
 		 List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
 		 
+		//filter機能でもsearchItemFormを使用するためセッションとして保存する
+			this.session.setAttribute("searchItemForm", searchItemForm);
+			
 		 CheckForm checkForm = new CheckForm();
 		 model.addAttribute("checkForm", checkForm);
 		 model.addAttribute("page", this.session.getAttribute("page"));
@@ -376,7 +382,7 @@ public class TaskController {
 	    List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
 	    //historyは0番目から始まる
 
-	    //String[]からStringへ変換
+	    //String[]からStringへ変換、サービスクラスのsearchTasksの型と合わせるため
 	    String searchFormWords = String.join(" ", history.get(historyNumber));
 	    System.out.println(historyNumber);
 	    System.out.println("検索文字"+ searchFormWords);
@@ -386,8 +392,9 @@ public class TaskController {
 	    CheckForm checkForm = new CheckForm();
 
 	    searchItemForm.setSearchWords(searchFormWords);
-	    
 		List<Task>taskList = taskService.searchTasks(searchItemForm, loginId, pageable);
+		//filter機能でもsearchItemFormを使用するためセッションとして保存する
+		this.session.setAttribute("searchItemForm", searchItemForm);
 		
 		 model.addAttribute("loginId", loginId);
 		 model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要

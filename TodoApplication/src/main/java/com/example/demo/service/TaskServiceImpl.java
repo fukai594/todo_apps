@@ -111,13 +111,15 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable){
+	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable, SearchItemForm searchItemForm){
+		//複数検索の場合を考慮し、配列にする
+		SearchItem searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));
 		//変換処理
 		Check check = convertToCheck(checkForm);
 		int limit = pageable.getPageSize();
 		int offset = (int)pageable.getOffset();
 		
-		return taskRepository.filterTask(check, loginId, limit, offset);
+		return taskRepository.filterTask(check, loginId, limit, offset, searchItem);
 	}
 	
 	public void updateLoginId(String loginId, String newLoginId) {

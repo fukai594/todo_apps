@@ -47,7 +47,7 @@ public interface TaskService {
 	
 	void updateLoginId(String loginId, String newLoginId);
 	
-	List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable);
+	List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable, SearchItemForm searchItemForm);
 	
 	List<Task> searchTasks(SearchItemForm searchItemForm, String loginId, Pageable pageable);
 	

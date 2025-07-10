@@ -312,7 +312,7 @@ public class TaskController {
 					 );
 			List<Task>taskList = taskService.findAll(loginId, pageable);
 			CheckForm checkForm = new CheckForm();
-			System.out.println(this.session.getAttribute("searchHistory"));
+			
 		 	model.addAttribute("loginId", loginId);
 		 	model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
 		 	model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
@@ -321,6 +321,7 @@ public class TaskController {
 		 	model.addAttribute("searchItemForm", searchItemForm);
 			model.addAttribute("taskList", taskList);
 			model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
+
 			
 			return "task/index";
 		 }
@@ -358,11 +359,12 @@ public class TaskController {
 		 return "task/index";
 	 }
 	 
-	 @GetMapping(value="task/searchHisory")
+	 @GetMapping(value="/task/searchHisory")
 	 public String searchTasksByHistory(
 	       @RequestParam int historyNumber,
 	       Model model,
-		   Authentication loginUser
+		   Authentication loginUser,
+		   RedirectAttributes redirectAttributes
 	    ) {
 		 String loginId = getLoginId(loginUser);
 		//ページネーション
@@ -370,21 +372,33 @@ public class TaskController {
 			 Integer.parseInt(this.session.getAttribute("page").toString()),
 			 Integer.parseInt(this.session.getAttribute("size").toString())
 			 );
-		List<Task>taskList = taskService.findAll(loginId, pageable);
-		SearchItemForm searchItemForm = new SearchItemForm();
-		CheckForm checkForm = new CheckForm();
-		System.out.println(this.session.getAttribute("searchHistory"));
-	 	model.addAttribute("loginId", loginId);
-	 	model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
-	 	model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
-	 	model.addAttribute("pageSize", taskList.size());
-	 	model.addAttribute("checkForm", checkForm);
-	 	model.addAttribute("searchItemForm", searchItemForm);
-		model.addAttribute("taskList", taskList);
-		model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
-		 List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
-		 //historyは0番目から始まる
-		 System.out.println(history.get(0));
+	    
+	    List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
+	    //historyは0番目から始まる
+
+	    //String[]からStringへ変換
+	    String searchFormWords = String.join(" ", history.get(historyNumber));
+	    System.out.println(historyNumber);
+	    System.out.println("検索文字"+ searchFormWords);
+//	    System.out.println(history.get(historyNumber));
+	    //task/indexページ表示のために初期化が必要
+	    SearchItemForm searchItemForm = new SearchItemForm();
+	    CheckForm checkForm = new CheckForm();
+
+	    searchItemForm.setSearchWords(searchFormWords);
+	    
+		List<Task>taskList = taskService.searchTasks(searchItemForm, loginId, pageable);
+		
+		 model.addAttribute("loginId", loginId);
+		 model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
+		 model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
+		 model.addAttribute("pageSize", taskList.size());
+		 model.addAttribute("checkForm", checkForm);
+		 model.addAttribute("searchItemForm", searchItemForm);
+		 model.addAttribute("taskList", taskList);
+		 model.addAttribute("searchHistory", history);
+		 
+		 
 		 return "task/index";
 	 }
 }

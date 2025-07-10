@@ -131,9 +131,6 @@ public class TaskServiceImpl implements TaskService{
 			,Pageable pageable){
 		//複数検索の場合を考慮し、配列にする
 		SearchItem searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));
-		System.out.println(searchItem.getSearchWordsList()[0]);
-		System.out.println(searchItem.getStartDate());
-		System.out.println(searchItem.getEndDate());
 		int limit = pageable.getPageSize();
 		int offset = (int)pageable.getOffset();
 		return taskRepository.searchTasks(searchItem,loginId, limit, offset);

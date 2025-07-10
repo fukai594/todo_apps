@@ -47,7 +47,16 @@
 				  <p th:if="${#fields.hasErrors('dateValid')}" th:errors="*{dateValid}" class="text-danger"></p>
 				<button type="submit" class="btn btn-primary me-3" value="submit">search</button>
 			</form>
-			
+			<div class="search-history" th:if="searchHistory">
+			    <span th:each="item, stat : ${searchHistory}">
+					<span th:if="${stat.index} != 0">
+					   ,	
+					</span>
+					<a th:href="@{/task/searchHisory(historyNumber=${stat.index})}" th:each="word : ${item}">
+						<span th:text="${word}"></span>
+					</a>
+			    </span>
+			</div>
 		</div>
 		<div class="filter-container">
 			<form method="get" th:action="@{/task/filter}" th:object="${checkForm}">

@@ -102,9 +102,7 @@ public class TaskServiceImpl implements TaskService{
 	 */
 	@Override
 	@Transactional
-	public String delete(int taskId) {
-		
-        
+	public String delete(int taskId) {        
         //削除処理
       	taskRepository.delete(taskId);
 		
@@ -113,13 +111,21 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable, SearchItemForm searchItemForm){
-		//複数検索の場合を考慮し、配列にする
+	public List<Task> filterTask(
+			CheckForm checkForm,
+			String loginId,
+			Pageable pageable,
+			SearchItemForm searchItemForm
+		){
+		
+		//変換処理
 		SearchItem searchItem = new SearchItem();
 		if (searchItemForm != null && searchItemForm.getSearchWords() != null){
-			searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));			
+			searchItem = convertToSearchItem(
+					searchItemForm,
+					splitWordsToList(searchItemForm.getSearchWords())
+				);//複数検索を考慮し、searchWordsListを配列にする			
 		}
-		//変換処理
 		Check check = convertToCheck(checkForm);
 		int limit = pageable.getPageSize();
 		int offset = (int)pageable.getOffset();
@@ -136,28 +142,31 @@ public class TaskServiceImpl implements TaskService{
 			SearchItemForm searchItemForm
 			,String loginId
 			,Pageable pageable){
-		//複数検索の場合を考慮し、配列にする
-		SearchItem searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));
+		//変換処理
+		SearchItem searchItem = convertToSearchItem(
+				searchItemForm,
+				splitWordsToList(searchItemForm.getSearchWords())
+			);
 		int limit = pageable.getPageSize();
 		int offset = (int)pageable.getOffset();
 		return taskRepository.searchTasks(searchItem,loginId, limit, offset);
 	}
+	//複数の検索をスペース区切りで配列にする
 	private String[] splitWordsToList(String searchWords) {
 		return searchWords.split("\\s|　+");
 	}
-//	検索履歴に追加する
-	public List<String[]> addSearchHistory(
+	
+//	検索履歴を登録
+	public List<String[]> registerSearchHistory(
 			String searchWords
 			,List<String[]> searchHistory
 			){
 		 String[] newSearchWords = splitWordsToList(searchWords);
-		 //履歴が5件以上あれば、もっとも古い履歴を削除する
-		 System.out.println(searchHistory.size());
-		 if(searchHistory.size() > 4) {//sizeの初期は0
-			 searchHistory.remove(0);
+
+		 if(searchHistory.size() > Constants.SEARCH_HISTORY_COUNT - 1) {//sizeは0始まり
+			 searchHistory.remove(0);//古い履歴を削除
 		 }
-		 searchHistory.add(newSearchWords);
-		 //最新履歴を追加する
+		 searchHistory.add(newSearchWords);//最新履歴を追加する
 		 return searchHistory;
 	}
 	
@@ -170,9 +179,9 @@ public class TaskServiceImpl implements TaskService{
 			 
 			 for(String[] item:historyForDisplay) {
 				 for(int i=0; i < item.length; i++) {
-					 if(item[i].length() > Constants.SEARCH_HISTORY_NUM) {
+					 if(item[i].length() > Constants.SEARCH_HISTORY_LENGTH_FOR_DESPLAY) {
 						 StringBuilder sb = new StringBuilder(item[i]);
-						 sb.replace(Constants.SEARCH_HISTORY_NUM, item[i].length(),"...");
+						 sb.replace(Constants.SEARCH_HISTORY_LENGTH_FOR_DESPLAY, item[i].length(),"...");
 						item[i] = sb.toString();
 					 }
 				 }
@@ -255,7 +264,10 @@ public class TaskServiceImpl implements TaskService{
 		return check;
 	}
 	
-	public SearchItem convertToSearchItem(SearchItemForm searchItemForm, String[] searchWordsList) {
+	public SearchItem convertToSearchItem(
+			SearchItemForm searchItemForm,
+			String[] searchWordsList
+		) {
 		SearchItem searchItem = new SearchItem();
 		searchItem.setSearchWordsList(searchWordsList);
 		searchItem.setStartDate(searchItemForm.getStartDate());

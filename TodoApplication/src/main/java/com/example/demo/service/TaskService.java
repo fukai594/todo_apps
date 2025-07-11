@@ -52,7 +52,7 @@ public interface TaskService {
 	List<Task> searchTasks(SearchItemForm searchItemForm, String loginId, Pageable pageable);
 	
 	//検索履歴の管理
-	List<String[]> addSearchHistory(String searchWords, List<String[]> searchHistory);
+	List<String[]> registerSearchHistory(String searchWords, List<String[]> searchHistory);
     /**
      * タスクのフォームデータをタスクエンティティに変換します。
      *

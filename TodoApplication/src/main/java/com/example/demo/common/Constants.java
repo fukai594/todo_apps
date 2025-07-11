@@ -16,5 +16,7 @@ public class Constants {
     public static final String ILLEGALARGUMENTEXCEPTION_ERROR = "タスクIDは正の整数である必要があります。";
     public static final String USER_REGISTER_COMPLETE = "New registrasion completed";
     public static final String USER_EDIT_COMPLETE = "The Registration details was successfully updated.";
-    public static final int SEARCH_HISTORY_NUM = 10;//表示用検索履歴の
+    public static final int SEARCH_HISTORY_LENGTH_FOR_DESPLAY = 10;//表示用検索履歴の文字列の長さ
+    public static final int SEARCH_HISTORY_COUNT = 5;//表示最大件数
+
 }

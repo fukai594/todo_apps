@@ -79,7 +79,7 @@
 					</div>
 				</div>
 				<div class="button-items">
-					<button type="submit" class="btn btn-primary me-2" value="submit">search</button>	
+					<button type="submit" class="btn btn-primary me-2" value="submit">filter</button>	
 					<a class="btn btn-primary" th:href="@{/task/list}">redisplay</a>
 				</div>
 			</form>
@@ -101,7 +101,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Sample Data -->
                   <tr th:each="taskList : ${taskList}" th:object="${taskList}">
                     <th scope="row" th:text="*{taskId}">1</th>
 					<td th:text="*{title}">title</td>
@@ -110,7 +109,6 @@
                     <td th:text="${#temporals.format(taskList.deadline, 'yyyy/MM/dd HH:mm')}">Formatted Deadline</td>
                     <td th:text="*{status == 1 ? '未着手' : status == 2 ? '作業中' : '完了'}">Status</td>
 					<td th:inline="text">[[*{progress}]]%</td>
-<!--					数値によって表示する値と色を変える-->
 					<td th:block th:switch="*{priority}">
 						<span th:case="4" th:text="最優先" style="color:#FF7F50"></span>
 						<span th:case="3" th:text="高" style="color:#ED7D31"></span>

@@ -64,7 +64,6 @@ public interface TaskService {
 	//表示用検索履歴を取得する
 	List<String[]> getHistoryForDisplay(List<String[]> history);
 	
-	
     Task convertToTask(TaskForm taskForm);
     
     /**

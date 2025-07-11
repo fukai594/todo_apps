@@ -408,8 +408,6 @@ public class TaskController {
 	    //String[]からStringへ変換、サービスクラスのsearchTasksの型と合わせるため
 	    String searchFormWords = String.join(" ", history.get(historyNumber));
 
-
-
 	    SearchItemForm searchItemForm = new SearchItemForm();
 	    searchItemForm.setSearchWords(searchFormWords);
 		List<Task>taskList = taskService.searchTasks(searchItemForm, loginId, pageable);

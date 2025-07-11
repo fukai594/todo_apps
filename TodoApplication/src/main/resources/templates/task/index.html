@@ -11,20 +11,55 @@
 	<nav class="navigation navbar bg-body-tertiary">
 		<div class="user-info">
 			<span class="navbar-brand mb-0 h1" th:text="${loginId}">LoginId</span>
+			<a th:href="@{/userInfo}">EditUserProfile</a>
 			<form th:action="@{/logout}" method="post" style="display: inline;">
 				<button type="submit" class="link-button">Log out</button>
 			</form>
 		</div>		
 	</nav>
-		<div class="container">
-		        <div class="px-4 pt-3 my-3 text-center border-bottom">
-		            <h1 class="display-4 fw-bold text-body-emphasis mb-3">ToDo Application</h1>
-		            <div class="col-lg-6 mx-auto">
-		              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-		                <a type="button" class="btn btn-primary btn-lg px-4 me-sm-3" th:href="@{/task/add}">create</a>
-		              </div>
-		            </div>
-		        </div>
+	<div class="container">
+        <div class="px-4 pt-3 my-4 text-center border-bottom">
+            <h1 class="display-4 fw-bold text-body-emphasis mb-3">ToDo Application</h1>
+            <div class="col-lg-6 mx-auto">
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                <a type="button" class="btn btn-primary btn-lg px-4 me-sm-3" th:href="@{/task/add}">create</a>
+              </div>
+            </div>
+        </div>
+		<div class="px-4 pt-2 my-3 text-center seach-item">
+			<form method="get"th:action="@{/task/search}" th:object="${searchItemForm}" >
+				<input type="text" placeholder="title or description" th:field=*{searchWords} class="input-field"/>
+				<p th:if="${#fields.hasErrors('searchWords')}" th:errors="*{searchWords}" class="text-danger"></p>
+				<p th:if="${#fields.hasErrors('inputFieldsValid')}" th:errors="*{inputFieldsValid}" class="text-danger"></p>
+				<br/>
+				<label>deadline:</label>
+				<input
+				  type="datetime-local"
+				  name="startDate"
+				  th:value="*{startDate}"
+				  />
+				 <span>～</span>
+				 <input
+				  type="datetime-local"
+				  id="endDate"
+				  name="endDate"
+				  th:value="*{endDate}"
+				  />
+				  <p th:if="${#fields.hasErrors('dateValid')}" th:errors="*{dateValid}" class="text-danger"></p>
+				<button type="submit" class="btn btn-primary me-3" value="submit">search</button>
+			</form>
+			<div class="search-history" th:if="historyForDesplay">
+				<span>searchHistory:</span>
+			    <span th:each="item, stat : ${historyForDesplay}">
+					<span th:if="${stat.index} != 0">
+					   ,	
+					</span>
+					<a th:href="@{/task/searchHisory(historyNumber=${stat.index})}" th:each="word : ${item}">
+						<span th:text="${word}"></span>
+					</a>
+			    </span>
+			</div>
+		</div>
 		<div class="filter-container">
 			<form method="get" th:action="@{/task/filter}" th:object="${checkForm}">
 				<div class="form-items">
@@ -44,7 +79,7 @@
 					</div>
 				</div>
 				<div class="button-items">
-					<button type="submit" class="btn btn-primary me-2" value="submit">search</button>	
+					<button type="submit" class="btn btn-primary me-2" value="submit">filter</button>	
 					<a class="btn btn-primary" th:href="@{/task/list}">redisplay</a>
 				</div>
 			</form>
@@ -66,7 +101,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Sample Data -->
                   <tr th:each="taskList : ${taskList}" th:object="${taskList}">
                     <th scope="row" th:text="*{taskId}">1</th>
 					<td th:text="*{title}">title</td>
@@ -75,7 +109,6 @@
                     <td th:text="${#temporals.format(taskList.deadline, 'yyyy/MM/dd HH:mm')}">Formatted Deadline</td>
                     <td th:text="*{status == 1 ? '未着手' : status == 2 ? '作業中' : '完了'}">Status</td>
 					<td th:inline="text">[[*{progress}]]%</td>
-<!--					数値によって表示する値と色を変える-->
 					<td th:block th:switch="*{priority}">
 						<span th:case="4" th:text="最優先" style="color:#FF7F50"></span>
 						<span th:case="3" th:text="高" style="color:#ED7D31"></span>
@@ -90,6 +123,9 @@
         </div>
 		<ul class="paging">
 			<li>
+				<p th:inline="text">[[${taskList.size()}]]件</p>
+			</li>
+			<li>
 				<a th:if="${page} > 0"
 				th:href="@{/task/list(page=${page - 1}, size=${size})}">&lt;&lt;</a>
 			</li>
@@ -99,7 +135,7 @@
 				&nbsp;
 			</li>
 			<li>
-			    <a th:if="${pageSize} == ${size}" th:href="@{/task/list(page=${page + 1}, size=${size})}">&gt;&gt;</a>
+			    <a th:if="${taskList.size()} == ${size}" th:href="@{/task/list(page=${page + 1}, size=${size})}">&gt;&gt;</a>
 			</li>
 		 </ul>
       </div>

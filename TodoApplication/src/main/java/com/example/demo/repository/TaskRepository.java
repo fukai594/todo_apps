@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Check;
+import com.example.demo.entity.SearchItem;
 import com.example.demo.entity.Task;
 import com.example.demo.mapper.TaskMapper;
 
@@ -73,9 +74,15 @@ public class TaskRepository {
     public int delete(int taskId) {
         return taskMapper.delete(taskId);
     }
-
-    public List<Task> filterTask(Check check, String loginId, int limit, int offset){
-    	return taskMapper.filterTask(check, loginId, limit, offset);
+    
+    public void updateLoginId(String loginId, String newLoginId) {
+    	taskMapper.updateLoginId(loginId, newLoginId);
     }
-
+    public List<Task> filterTask(Check check, String loginId, int limit, int offset,SearchItem searchItem){
+    	return taskMapper.filterTask(check, loginId, limit, offset, searchItem);
+    }
+    
+    public List<Task> searchTasks(SearchItem searchItem,String loginId, int limit, int offset){
+    	return taskMapper.searchTasks(searchItem, loginId, limit, offset);
+    }
 }

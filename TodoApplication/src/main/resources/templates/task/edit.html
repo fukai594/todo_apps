@@ -63,8 +63,6 @@
 			<br/>
             <input type="hidden" name="taskId" th:value="*{taskId}">
             <input type="hidden" name="updatedAt" th:value="*{updatedAt}">
-            
-            <!-- 送信ボタン -->
             <button type="submit" class="btn btn-primary" value="Confirm">Confirm</button>
             <a type="button" class="btn btn-outline-secondary" th:href="@{/task/list(page=${page}, size=${size})}">back</a>
           </form>

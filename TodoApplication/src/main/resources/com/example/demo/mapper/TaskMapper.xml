@@ -8,21 +8,20 @@
 	<select id="findAll" resultType="com.example.demo.entity.Task">
         <![CDATA[
 	SELECT
-           taskid,
+       taskid,
 	   title,
 	   description,
 	   deadline,
 	   status,
 	   progress,
-           priority,
+       priority,
 	   CASE
              WHEN CURRENT_TIMESTAMP > deadline and status <> 3 THEN 1
              WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' > deadline and status <> 3 THEN 2
            ELSE 0
-    	 END AS message
-        FROM task
+       END AS message
+       FROM task
 	WHERE deleteFlg = 0 and loginId=#{loginId}
-
 	ORDER BY priority DESC,deadline
 	LIMIT #{limit} OFFSET #{offset}
         ]]>;
@@ -51,16 +50,21 @@
 	   UPDATE task SET title = #{title}, description = #{description},deadline = #{deadline},status = #{status}, progress = #{progress}, priority = #{priority}, updated_at = CURRENT_TIMESTAMP WHERE taskId = #{taskId} and updated_at = #{updatedAt}; 
    </update>
     
+<!-- loginId更新 -->
+   <update id="updateLoginId">
+	   UPDATE task SET loginId=#{newLoginId} ,updated_at = CURRENT_TIMESTAMP WHERE loginId=#{loginId}; 
+   </update>
+
 <!-- Taskのフィルタリング -->
   <select id="filterTask" resultType="com.example.demo.entity.Task">
-    	SELECT
+    SELECT
 	   taskid,
 	   title,
 	   description,
 	   deadline,
 	   status,
 	   progress,
-       	   priority,
+       priority,
 	   CASE
              WHEN CURRENT_TIMESTAMP &gt; deadline and status != 3 THEN 1
              WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' &gt; deadline and status != 3 THEN 2
@@ -80,8 +84,54 @@
     	1=0
   	)
 	</if>
+	<if test="searchItem.searchWordsList != null">
+       AND
+	     <foreach item="searchWord" open="(" separator="OR" close=")" collection="searchItem.searchWordsList">
+  	       title ILIKE '%' || #{searchWord} || '%' OR description ILIKE '%' || #{searchWord} || '%'
+	     </foreach>
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate == null">
+	     AND deadline &gt; #{searchItem.startDate}
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate != null">
+	     AND deadline BETWEEN #{searchItem.startDate} AND #{searchItem.endDate}
+	</if>
 	ORDER BY priority DESC,deadline
         LIMIT #{limit} OFFSET #{offset};
    </select>
-
+<!-- Taskの検索-->
+  <select id="searchTasks" resultType="com.example.demo.entity.Task">
+    SELECT
+	   taskid,
+	   title,
+	   description,
+	   deadline,
+	   status,
+	   progress,
+       priority,
+	   CASE
+             WHEN CURRENT_TIMESTAMP &gt; deadline and status != 3 THEN 1
+             WHEN CURRENT_TIMESTAMP + INTERVAL '48 hours' &gt; deadline and status != 3 THEN 2
+           ELSE 0
+       END AS message
+       FROM task
+	<where>
+	deleteFlg=0
+	AND loginId=#{loginId}
+       <if test="searchItem.searchWordsList != null">
+       AND
+	     <foreach item="searchWord" open="(" separator="OR" close=")" collection="searchItem.searchWordsList">
+  	       title ILIKE '%' || #{searchWord} || '%' OR description ILIKE '%' || #{searchWord} || '%'
+	     </foreach>
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate == null">
+	     AND deadline &gt; #{searchItem.startDate}
+	   </if>
+	   <if test="searchItem.startDate != null and searchItem.endDate != null">
+	     AND deadline BETWEEN #{searchItem.startDate} AND #{searchItem.endDate}
+	   </if>
+	</where>
+	ORDER BY priority DESC,deadline
+    LIMIT #{limit} OFFSET #{offset};
+   </select>
 </mapper>

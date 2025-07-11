@@ -54,7 +54,6 @@
 			   <input type="hidden" name="progress" th:field="*{progress}">
 			   <input type="hidden" name="priority" th:field="*{priority}">
                <input type="hidden" name="updatedAt" th:value="*{updatedAt}">
-               <!-- 送信ボタン -->
                <button type="submit" class="btn btn-primary me-2" value="submit">submit</button>
             </form> 
             <form th:action="@{/task/back}" method="get" th:object="${taskForm}">

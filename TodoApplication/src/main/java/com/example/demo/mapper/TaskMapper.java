@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.entity.Check;
+import com.example.demo.entity.SearchItem;
 import com.example.demo.entity.Task;
 
 /**
@@ -52,5 +53,9 @@ public interface TaskMapper {
      */
     int delete(int taskId);
     
-    List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId, int limit, int offset);
+    List<Task> filterTask(@Param("check") Check check, @Param("loginId") String loginId, int limit, int offset, SearchItem searchItem);
+    
+    void updateLoginId(String loginId, String newLoginId);
+    
+    List<Task> searchTasks(SearchItem searchItem, String loginId, int limit, int offset);
 }

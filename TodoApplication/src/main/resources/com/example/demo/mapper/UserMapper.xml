@@ -33,4 +33,29 @@
         ,CURRENT_TIMESTAMP
         );
     </insert>
+    <select id="getUser" resultType="com.example.demo.entity.User">
+       SELECT * FROM users where loginId=#{loginId};
+    </select>
+
+    <update id="updateLoginId">
+        UPDATE users
+        SET
+        loginId=#{newLoginId}
+        , createdAt=CURRENT_TIMESTAMP
+	where loginId=#{loginId}
+    </update>
+    <update id="updatePassword">
+        UPDATE users
+        SET
+        password=#{password}
+        , createdAt=CURRENT_TIMESTAMP
+	where loginId=#{loginId}
+    </update>
+    <update id="updateUserName">
+        UPDATE users
+        SET
+        userName=#{userName}
+        , createdAt=CURRENT_TIMESTAMP
+	where loginId=#{loginId}
+    </update>
 </mapper>

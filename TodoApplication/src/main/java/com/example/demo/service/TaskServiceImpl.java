@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.common.Constants;
 import com.example.demo.entity.Check;
+import com.example.demo.entity.SearchItem;
 import com.example.demo.entity.Task;
 import com.example.demo.form.CheckForm;
+import com.example.demo.form.SearchItemForm;
 import com.example.demo.form.TaskForm;
 import com.example.demo.repository.TaskRepository;
 
@@ -98,9 +102,7 @@ public class TaskServiceImpl implements TaskService{
 	 */
 	@Override
 	@Transactional
-	public String delete(int taskId) {
-		
-        
+	public String delete(int taskId) {        
         //削除処理
       	taskRepository.delete(taskId);
 		
@@ -109,15 +111,103 @@ public class TaskServiceImpl implements TaskService{
 		
 	}
 	
-	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable){
+	public List<Task> filterTask(
+			CheckForm checkForm,
+			String loginId,
+			Pageable pageable,
+			SearchItemForm searchItemForm
+		){
+		
 		//変換処理
+		SearchItem searchItem = new SearchItem();
+		if (searchItemForm != null && searchItemForm.getSearchWords() != null){
+			searchItem = convertToSearchItem(
+					searchItemForm,
+					splitWordsToList(searchItemForm.getSearchWords())
+				);//複数検索を考慮し、searchWordsListを配列にする			
+		}
 		Check check = convertToCheck(checkForm);
 		int limit = pageable.getPageSize();
 		int offset = (int)pageable.getOffset();
 		
-		return taskRepository.filterTask(check, loginId, limit, offset);
+		return taskRepository.filterTask(check, loginId, limit, offset, searchItem);
 	}
 	
+	public void updateLoginId(String loginId, String newLoginId) {
+		taskRepository.updateLoginId(loginId, newLoginId);
+	}
+	
+	 //サービスクラスで複数検索に対するスペース区切りの文字分割の処理を行う
+	public List<Task> searchTasks(
+			SearchItemForm searchItemForm
+			,String loginId
+			,Pageable pageable){
+		//変換処理
+		SearchItem searchItem = convertToSearchItem(
+				searchItemForm,
+				splitWordsToList(searchItemForm.getSearchWords())
+			);
+		int limit = pageable.getPageSize();
+		int offset = (int)pageable.getOffset();
+		return taskRepository.searchTasks(searchItem,loginId, limit, offset);
+	}
+	//複数の検索をスペース区切りで配列にする
+	private String[] splitWordsToList(String searchWords) {
+		return searchWords.split("\\s|　+");
+	}
+	
+//	検索履歴を登録
+	public List<String[]> registerSearchHistory(
+			String searchWords
+			,List<String[]> searchHistory
+			){
+		 String[] newSearchWords = splitWordsToList(searchWords);
+
+		 if(searchHistory.size() > Constants.SEARCH_HISTORY_COUNT - 1) {//sizeは0始まり
+			 searchHistory.remove(0);//古い履歴を削除
+		 }
+		 searchHistory.add(newSearchWords);//最新履歴を追加する
+		 return searchHistory;
+	}
+	
+	//表示用検索履歴を取得する
+		public List<String[]> getHistoryForDisplay(List<String[]> history){
+			List<String[]> historyForDisplay = new ArrayList<>();
+			 for(String[] item: history) {
+				 historyForDisplay.add(item.clone());
+			 }
+			 
+			 for(String[] item:historyForDisplay) {
+				 for(int i=0; i < item.length; i++) {
+					 if(item[i].length() > Constants.SEARCH_HISTORY_LENGTH_FOR_DESPLAY) {
+						 StringBuilder sb = new StringBuilder(item[i]);
+						 sb.replace(Constants.SEARCH_HISTORY_LENGTH_FOR_DESPLAY, item[i].length(),"...");
+						item[i] = sb.toString();
+					 }
+				 }
+			 }
+			 return historyForDisplay;
+		}
+	
+	public List<String[]> deleteDuplicateHistory(List<String[]> searchHistory){
+		LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
+
+		//重複削除のためにセットに検索履歴を追加する
+		for(String[] item: searchHistory) {
+			for(String word: item) {
+				linkedHashSet.add(word);
+			}
+		}
+		//セットで格納した値を配列にして、リストに追加する
+		List<String[]> duplicatedSearchHistory = new ArrayList<>();
+		for(String item: linkedHashSet) {
+			duplicatedSearchHistory.add(new String[] {item});
+		}
+
+		return duplicatedSearchHistory;
+
+		}
+
 	/**
 	 * タスクフォームをタスクエンティティに変換するメソッドです。
 	 *
@@ -173,4 +263,16 @@ public class TaskServiceImpl implements TaskService{
 		check.setCheckPriority4(checkForm.getCheckPriority4());
 		return check;
 	}
+	
+	public SearchItem convertToSearchItem(
+			SearchItemForm searchItemForm,
+			String[] searchWordsList
+		) {
+		SearchItem searchItem = new SearchItem();
+		searchItem.setSearchWordsList(searchWordsList);
+		searchItem.setStartDate(searchItemForm.getStartDate());
+		searchItem.setEndDate(searchItemForm.getEndDate());
+		return searchItem;
+	}
+
 }

@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +115,10 @@ public class TaskServiceImpl implements TaskService{
 	
 	public List<Task> filterTask(CheckForm checkForm, String loginId, Pageable pageable, SearchItemForm searchItemForm){
 		//複数検索の場合を考慮し、配列にする
-		SearchItem searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));
+		SearchItem searchItem = new SearchItem();
+		if (searchItemForm != null && searchItemForm.getSearchWords() != null){
+			searchItem = convertToSearchItem(searchItemForm, splitWordsToList(searchItemForm.getSearchWords()));			
+		}
 		//変換処理
 		Check check = convertToCheck(checkForm);
 		int limit = pageable.getPageSize();
@@ -155,7 +160,46 @@ public class TaskServiceImpl implements TaskService{
 		 //最新履歴を追加する
 		 return searchHistory;
 	}
-	/**s
+	
+	//表示用検索履歴を取得する
+		public List<String[]> getHistoryForDisplay(List<String[]> history){
+			List<String[]> historyForDisplay = new ArrayList<>();
+			 for(String[] item: history) {
+				 historyForDisplay.add(item.clone());
+			 }
+			 
+			 for(String[] item:historyForDisplay) {
+				 for(int i=0; i < item.length; i++) {
+					 if(item[i].length() > Constants.SEARCH_HISTORY_NUM) {
+						 StringBuilder sb = new StringBuilder(item[i]);
+						 sb.replace(Constants.SEARCH_HISTORY_NUM, item[i].length(),"...");
+						item[i] = sb.toString();
+					 }
+				 }
+			 }
+			 return historyForDisplay;
+		}
+	
+	public List<String[]> deleteDuplicateHistory(List<String[]> searchHistory){
+		LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
+
+		//重複削除のためにセットに検索履歴を追加する
+		for(String[] item: searchHistory) {
+			for(String word: item) {
+				linkedHashSet.add(word);
+			}
+		}
+		//セットで格納した値を配列にして、リストに追加する
+		List<String[]> duplicatedSearchHistory = new ArrayList<>();
+		for(String item: linkedHashSet) {
+			duplicatedSearchHistory.add(new String[] {item});
+		}
+
+		return duplicatedSearchHistory;
+
+		}
+
+	/**
 	 * タスクフォームをタスクエンティティに変換するメソッドです。
 	 *
 	 * @param taskForm タスクフォーム

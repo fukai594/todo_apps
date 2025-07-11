@@ -60,25 +60,24 @@ public class TaskController {
 			@RequestParam(defaultValue="0") int page,
 			@RequestParam(defaultValue="10") int size){
 		
-		//ログインしているユーザーのloginIdを取得
-		String loginId = getLoginId(loginUser);
-		//ページネーション
-		Pageable pageable = PageRequest.of(page, size);
+		String loginId = getLoginId(loginUser);//ログインしているユーザーのloginIdを取得
+		
+		Pageable pageable = PageRequest.of(page, size);//ページネーションのためにオブジェクトを生成
 		List<Task>taskList = taskService.findAll(loginId, pageable);
+		
 	 	CheckForm checkForm = new CheckForm();
 	 	SearchItemForm searchItemForm = new SearchItemForm();
-//	 	session:page,sizeの値を設定
+
 	 	this.session.setAttribute("page", page);
 	 	this.session.setAttribute("size", size);
-	 	
+
 	 	model.addAttribute("loginId", loginId);
-	 	model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
-	 	model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
-	 	model.addAttribute("pageSize", taskList.size());
+	 	model.addAttribute("page",this.session.getAttribute("page"));
+	 	model.addAttribute("size",this.session.getAttribute("size"));
 	 	model.addAttribute("checkForm", checkForm);
 	 	model.addAttribute("searchItemForm", searchItemForm);
 		model.addAttribute("taskList", taskList);
-		model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
+		model.addAttribute("historyForDesplay", this.session.getAttribute("historyForDesplay"));//検索履歴表示用
 
 		return "task/index";
 	}
@@ -148,8 +147,6 @@ public class TaskController {
 		//先頭と末尾の空白を取り除く
 		taskForm.setTitle(taskForm.getTitle().strip());
 		taskForm.setDescription(taskForm.getDescription().strip());
-		model.addAttribute("page", this.session.getAttribute("page"));
-		model.addAttribute("size", this.session.getAttribute("size"));
 		model.addAttribute("taskForm", taskForm);
 		
 		return "task/confirm";
@@ -217,8 +214,8 @@ public class TaskController {
 		try {
 			TaskForm taskForm = taskService.getTask(taskId, loginId);
 			model.addAttribute("taskForm", taskForm);
-			model.addAttribute("page", this.session.getAttribute("page"));
-			model.addAttribute("size", this.session.getAttribute("size"));
+			model.addAttribute("page", this.session.getAttribute("page"));//backボタンを押下した際の遷移パラメータとして必要
+			model.addAttribute("size", this.session.getAttribute("size"));//backボタンを押下した際の遷移パラメータとして必要
 		}catch(NullPointerException | IllegalStateException ex) {
 			model.addAttribute("errorMessage", "不正なアクセスです。");
 		    return "task/systemError";
@@ -248,7 +245,6 @@ public class TaskController {
 		//redirect先に値を渡す
 		redirectAttributes.addFlashAttribute("completeMessage", completeMessage);
 		
-		
 		return "redirect:/task/complete";
 	}
 	
@@ -275,8 +271,8 @@ public class TaskController {
 			
 		 	if (bindingResult.hasErrors()) {
 				return "task/index";
-		 	}
 		 	//session:pageの値を再設定
+		 	}
 		 	this.session.setAttribute("page",0);
 //		 	PageRequest.ofの引数がint,intのため変換処理
 			Pageable pageable = PageRequest.of(
@@ -285,14 +281,16 @@ public class TaskController {
 					);
 			//searchで検索したのち、絞り込み検索する場合を考慮し、searchFormを引数にとる
 			SearchItemForm searchItemForm = (SearchItemForm)this.session.getAttribute("searchItemForm");
-		 	List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable,searchItemForm);
-		 	
-
-		 	model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
+			if (searchItemForm == null){//検索しないで絞り込みを先にするケース
+				searchItemForm = new SearchItemForm(); 				
+			}
+			List<Task> taskList = taskService.filterTask(checkForm, getLoginId(loginUser), pageable,searchItemForm);
+			
+			
+		 	model.addAttribute("historyForDesplay", this.session.getAttribute("historyForDesplay"));
 		 	model.addAttribute("searchItemForm", searchItemForm);
 		 	model.addAttribute("page",this.session.getAttribute("page"));
 		 	model.addAttribute("size",this.session.getAttribute("size"));
-		 	model.addAttribute("pageSize", taskList.size());
 		 	model.addAttribute("taskList", taskList);
 			
 			return "task/index";
@@ -306,7 +304,7 @@ public class TaskController {
 		     Authentication loginUser	     
 	     ) {
 
-		 //これをshowTaskを呼び出すように変更が必要
+		 //バリデーションを表示、必要なmodelに値を追加してindex.htmlに渡す
 		 if(bindingResult.hasErrors()) {
 			 String loginId = getLoginId(loginUser);
 				//ページネーション
@@ -320,7 +318,6 @@ public class TaskController {
 		 	model.addAttribute("loginId", loginId);
 		 	model.addAttribute("page",this.session.getAttribute("page"));//ページングのために必要
 		 	model.addAttribute("size",this.session.getAttribute("size"));//ページングのために必要
-		 	model.addAttribute("pageSize", taskList.size());
 		 	model.addAttribute("checkForm", checkForm);
 		 	model.addAttribute("searchItemForm", searchItemForm);
 			model.addAttribute("taskList", taskList);
@@ -343,17 +340,45 @@ public class TaskController {
 			 List<String> searchHistory = new ArrayList<String>();
 			 this.session.setAttribute("searchHistory", searchHistory);
 		 }
-		 //searchHistoryを更新
+		 
+		//searchHistoryを更新
 		 List<String[]> newSearchHistory = taskService.addSearchHistory(
 				 searchItemForm.getSearchWords()
 				 ,(List<String[]>)this.session.getAttribute("searchHistory")//List<String[]>にキャスト
-			);
-		 
+				 );
 		 this.session.setAttribute("searchHistory", newSearchHistory);
-		 List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
 		 
+		 List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
+		 //重複した履歴をなくす
+		 List<String[]> duplicatedSearchHistory = new ArrayList<>();
+	     duplicatedSearchHistory = taskService.deleteDuplicateHistory(history);
+			 //セッションにセット
+		 System.out.println(duplicatedSearchHistory.size());
+
+		 //仕様に対応した表示用検索履歴を用意する
+		 this.session.setAttribute("searchHistory", duplicatedSearchHistory);
+		 
+		 List<String[]> sessionHistory = (List<String[]>)this.session.getAttribute("searchHistory");
+
+		 Object historyObj = this.session.getAttribute("searchHistory");
+		 if (historyObj instanceof List) {
+		     List<?> list = (List<?>) historyObj;
+		     for (Object item : list) {
+		         System.out.println("item class: " + item.getClass().getName());
+		     }
+		 }
+		 System.out.println("sessionHistory size:" + (sessionHistory != null ? sessionHistory.size() : "null"));
+		 
+		 List<String[]> historyForDesplay = taskService.getHistoryForDisplay(sessionHistory);
+		 this.session.setAttribute("historyForDesplay", historyForDesplay);
+		 for (String[] array : duplicatedSearchHistory) {
+			    for (String str : array) {
+			        System.out.print(str + " ");
+			    }
+			    System.out.println(); // 配列ごとに改行
+		 }
 		//filter機能でもsearchItemFormを使用するためセッションとして保存する
-			this.session.setAttribute("searchItemForm", searchItemForm);
+		 this.session.setAttribute("searchItemForm", searchItemForm);
 			
 		 CheckForm checkForm = new CheckForm();
 		 model.addAttribute("checkForm", checkForm);
@@ -361,7 +386,8 @@ public class TaskController {
 		 model.addAttribute("size", this.session.getAttribute("size"));
 		 model.addAttribute("pageSize", taskList.size());
 		 model.addAttribute("taskList", taskList);
-		 model.addAttribute("searchHistory", history);
+		 model.addAttribute("historyForDesplay", this.session.getAttribute("historyForDesplay"));
+		 model.addAttribute("searchHistory", this.session.getAttribute("searchHistory"));
 		 return "task/index";
 	 }
 	 
@@ -379,7 +405,7 @@ public class TaskController {
 			 Integer.parseInt(this.session.getAttribute("size").toString())
 			 );
 	    
-	    List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
+		 List<String[]> history = (List<String[]>) this.session.getAttribute("searchHistory");
 	    //historyは0番目から始まる
 
 	    //String[]からStringへ変換、サービスクラスのsearchTasksの型と合わせるため
@@ -388,11 +414,34 @@ public class TaskController {
 	    System.out.println("検索文字"+ searchFormWords);
 //	    System.out.println(history.get(historyNumber));
 	    //task/indexページ表示のために初期化が必要
+
 	    SearchItemForm searchItemForm = new SearchItemForm();
 	    CheckForm checkForm = new CheckForm();
 
 	    searchItemForm.setSearchWords(searchFormWords);
 		List<Task>taskList = taskService.searchTasks(searchItemForm, loginId, pageable);
+		
+		//searchHistoryを更新
+		 List<String[]> newSearchHistory = taskService.addSearchHistory(
+				 searchItemForm.getSearchWords()
+				 ,(List<String[]>)this.session.getAttribute("searchHistory")//List<String[]>にキャスト
+			);
+		 //重複した履歴をなくす
+		 List<String[]> duplicatedSearchHistory = new ArrayList<>();
+	     duplicatedSearchHistory = taskService.deleteDuplicateHistory(history);
+			 //セッションにセット
+		 System.out.println(duplicatedSearchHistory.size());
+
+		 //仕様に対応した表示用検索履歴を用意する
+		 this.session.setAttribute("searchHistory", duplicatedSearchHistory);
+		 
+		 List<String[]> sessionHistory = (List<String[]>)this.session.getAttribute("searchHistory");
+
+		 List<String[]> historyForDesplay = taskService.getHistoryForDisplay(sessionHistory);
+		 this.session.setAttribute("historyForDesplay", historyForDesplay);
+		 this.session.setAttribute("searchHistory", newSearchHistory);
+		 //newHistoryを追加したsearchHistoryを再代入
+		 history = (List<String[]>) this.session.getAttribute("searchHistory");
 		//filter機能でもsearchItemFormを使用するためセッションとして保存する
 		this.session.setAttribute("searchItemForm", searchItemForm);
 		
@@ -403,9 +452,8 @@ public class TaskController {
 		 model.addAttribute("checkForm", checkForm);
 		 model.addAttribute("searchItemForm", searchItemForm);
 		 model.addAttribute("taskList", taskList);
-		 model.addAttribute("searchHistory", history);
-		 
-		 
+		 model.addAttribute("historyForDesplay", historyForDesplay);
+		 model.addAttribute("historyForDesplay", this.session.getAttribute("historyForDesplay"));
 		 return "task/index";
 	 }
 }

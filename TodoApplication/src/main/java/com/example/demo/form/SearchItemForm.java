@@ -12,18 +12,24 @@ public class SearchItemForm {
 	private LocalDateTime startDate;
 
 	private LocalDateTime endDate;
-	
-//	開始日と終了日の比較。同日でもよい
-	@AssertTrue(message="開始日は終了日より前または同日にしてください")
+
+	@AssertTrue(message="開始日・終了日の指定が間違っています")
 	public boolean isDateValid() {
 		if(startDate == null && endDate != null) return false;
 		if (startDate != null && endDate != null) {
 		    if (startDate.isAfter(endDate)) {
-		        // エラー処理など
+		        return false;
 		    }
 		}
 		return true;
 	}
+	//日付を入力した際は必ず、検索文字を入力する
+	@AssertTrue(message="検索したい文字を入力してください")
+	public boolean isInputFieldsValid() {
+		if(startDate != null && searchWords == "")return false;
+		return true;
+	}
+	
 	
 	public String getSearchWords() {
 		return searchWords;

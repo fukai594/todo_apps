@@ -59,6 +59,12 @@ public interface TaskService {
      * @param taskForm タスクのフォームデータ
      * @return タスクエンティティ
      */
+	
+	
+	//表示用検索履歴を取得する
+	List<String[]> getHistoryForDisplay(List<String[]> history);
+	
+	
     Task convertToTask(TaskForm taskForm);
     
     /**
@@ -69,4 +75,7 @@ public interface TaskService {
      */
     TaskForm convertToTaskForm(Task task);
     Check convertToCheck(CheckForm checkForm);
+    
+    //検索履歴の重複を削除する
+    List<String[]> deleteDuplicateHistory(List<String[]> searchHistory);
 }

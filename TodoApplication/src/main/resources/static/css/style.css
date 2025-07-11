@@ -40,3 +40,8 @@
 	justify-content: center;
 	list-style-type: none;
 }
+.search-item{
+	.input-field{
+		padding-right: 150px;
+	}
+}

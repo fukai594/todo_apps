@@ -361,18 +361,13 @@ public class TaskController {
 			 List<String> searchHistory = new ArrayList<String>();
 			 this.session.setAttribute("searchHistory", searchHistory);
 		 }
-		 
-		//searchHistoryを更新
+		 //searchHistoryを更新
 		 List<String[]> newSearchHistory = taskService.registerSearchHistory(
 				 searchItemForm.getSearchWords()
 				 ,(List<String[]>)this.session.getAttribute("searchHistory")
 				 );
 		 this.session.setAttribute("searchHistory", newSearchHistory);
 		 
-		 //重複した履歴をなくす
-		 List<String[]> duplicatedSearchHistory = new ArrayList<>();
-	     duplicatedSearchHistory = taskService.deleteDuplicateHistory((List<String[]>) this.session.getAttribute("searchHistory"));
-		 this.session.setAttribute("searchHistory", duplicatedSearchHistory);
 		 //表示用の履歴リストの生成
 		 List<String[]> historyForDesplay = taskService.getHistoryForDisplay((List<String[]>)this.session.getAttribute("searchHistory"));
 		 this.session.setAttribute("historyForDesplay", historyForDesplay);
@@ -417,12 +412,7 @@ public class TaskController {
 				 searchItemForm.getSearchWords()
 				 ,(List<String[]>)this.session.getAttribute("searchHistory")//List<String[]>にキャスト
 			);
-		 //重複した履歴をなくす
-		 List<String[]> duplicatedSearchHistory = new ArrayList<>();
-	     duplicatedSearchHistory = taskService.deleteDuplicateHistory(history);
-
-		 //仕様に対応した表示用検索履歴を用意する
-		 this.session.setAttribute("searchHistory", duplicatedSearchHistory);
+		 this.session.setAttribute("searchHistory", newSearchHistory);
 		 
 		 List<String[]> historyForDesplay = taskService.getHistoryForDisplay((List<String[]>)this.session.getAttribute("searchHistory"));
 		 this.session.setAttribute("historyForDesplay", historyForDesplay);

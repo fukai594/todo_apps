@@ -163,11 +163,16 @@ public class TaskServiceImpl implements TaskService{
 			){
 		 String[] newSearchWords = splitWordsToList(searchWords);
 
-		 if(searchHistory.size() > Constants.SEARCH_HISTORY_COUNT - 1) {//sizeは0始まり
-			 searchHistory.remove(0);//古い履歴を削除
-		 }
 		 searchHistory.add(newSearchWords);//最新履歴を追加する
-		 return searchHistory;
+
+		//重複削除
+		 List<String[]> duplicatedSearchHistory=  deleteDuplicateHistory(searchHistory);
+		 //検索履歴の管理
+		 if(duplicatedSearchHistory.size() > Constants.SEARCH_HISTORY_COUNT) {//sizeは0始まり
+			 int range = duplicatedSearchHistory.size() - Constants.SEARCH_HISTORY_COUNT;//検索履歴が複数ある場合に対応
+			 duplicatedSearchHistory.subList(0,range).clear();//古い履歴を削除
+		 }
+		 return duplicatedSearchHistory;
 	}
 	
 	//表示用検索履歴を取得する

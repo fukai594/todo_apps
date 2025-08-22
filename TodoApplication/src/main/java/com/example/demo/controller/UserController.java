@@ -219,7 +219,7 @@ public class UserController {
 	//ログイン中のユーザー情報を取得
 	private String getLoginId(Authentication loginUser) {
 		AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-		 return userDetails.getUser().getLoginId();
+		 return userDetails.getUsername();
 	}
 	@GetMapping("/back")
 	public String backToEditPage(

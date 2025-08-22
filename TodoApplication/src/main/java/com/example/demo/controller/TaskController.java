@@ -7,7 +7,8 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.auth.AuthUserDetails;
 import com.example.demo.entity.Task;
 import com.example.demo.form.CheckForm;
 import com.example.demo.form.SearchItemForm;
@@ -43,10 +43,10 @@ public class TaskController {
         this.session = session;
     }
     //ログイン中のユーザーのloginIdを取得
-	 private String getLoginId(Authentication loginUser) {
-		 AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-		 return userDetails.getUser().getLoginId(); 
+	 private String getLoginId(UserDetails user) {
+		 return user.getUsername();
 	 }
+	 
     /**
      * タスクの一覧を表示するメソッドです。
      * 
@@ -55,12 +55,13 @@ public class TaskController {
      */
 	@RequestMapping(value = "/task/list", method = RequestMethod.GET)
 	public String showTask(
-			Authentication loginUser,
 			Model model,
 			@RequestParam(defaultValue="0") int page,
-			@RequestParam(defaultValue="10") int size){
+			@RequestParam(defaultValue="10") int size,
+			@AuthenticationPrincipal UserDetails user){
 		
-		String loginId = getLoginId(loginUser);//ログインしているユーザーのloginIdを取得
+		String loginId = getLoginId(user);
+		//ログインしているユーザーのloginIdを取得
 		
 		Pageable pageable = PageRequest.of(page, size);//ページネーションのためにオブジェクトを生成
 		List<Task>taskList = taskService.findAll(loginId, pageable);
@@ -108,10 +109,10 @@ public class TaskController {
 	public String showEditForm(
 			@RequestParam("taskId") int taskId,
 			Model model,
-			Authentication loginUser) {
+			@AuthenticationPrincipal UserDetails user) {
 		
 	    // タスクIDに基づいてタスクを取得
-		String loginId = getLoginId(loginUser);
+		String loginId = getLoginId(user);
 		try {
 			TaskForm taskForm = taskService.getTask(taskId, loginId);
 			model.addAttribute("taskForm", taskForm);
@@ -167,7 +168,7 @@ public class TaskController {
 			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes,
 			Model model,
-			Authentication loginUser
+			@AuthenticationPrincipal UserDetails user
 		) {
 		
 		//バリデーションチェック
@@ -176,7 +177,7 @@ public class TaskController {
 			return "task/edit";
 		}
 		//ログインIDをtaskFormにセットする
-		taskForm.setLoginId(getLoginId(loginUser));
+		taskForm.setLoginId(getLoginId(user));
 		String completeMessage =taskService.save(taskForm);
 		
 		//redirect先に値を渡す
@@ -206,11 +207,11 @@ public class TaskController {
 	public String showDeleteForm(
 			@RequestParam("taskId") int taskId,
 			Model model,
-			Authentication loginUser
+			@AuthenticationPrincipal UserDetails user
 	 ) {
 		
 	    // タスクIDに基づいてタスクを取得
-		String loginId = getLoginId(loginUser);
+		String loginId = getLoginId(user);
 		try {
 			TaskForm taskForm = taskService.getTask(taskId, loginId);
 			model.addAttribute("taskForm", taskForm);
@@ -266,11 +267,11 @@ public class TaskController {
 				@Validated CheckForm checkForm,
 				BindingResult bindingResult,
 				Model model,
-				Authentication loginUser
+				@AuthenticationPrincipal UserDetails user
 				) {
 			
 		 	if (bindingResult.hasErrors()) {
-		 		String loginId = getLoginId(loginUser);
+		 		String loginId = getLoginId(user);
 				//ページネーション
 		 		Pageable pageable = PageRequest.of(
 					 Integer.parseInt(this.session.getAttribute("page").toString()),
@@ -301,11 +302,11 @@ public class TaskController {
 				searchItemForm = new SearchItemForm(); 				
 			}
 			List<Task> taskList = taskService.filterTask(
-					checkForm, getLoginId(loginUser),
+					checkForm, getLoginId(user),
 					pageable,searchItemForm
 				);
 			
-			model.addAttribute("loginId", getLoginId(loginUser));
+			model.addAttribute("loginId", getLoginId(user));
 		 	model.addAttribute("searchItemForm", searchItemForm);
 		 	model.addAttribute("taskList", taskList);
 		 	model.addAttribute("historyForDesplay", this.session.getAttribute("historyForDesplay"));
@@ -320,12 +321,12 @@ public class TaskController {
 		     @Validated SearchItemForm searchItemForm,
 		     BindingResult bindingResult,
 		     Model model,
-		     Authentication loginUser	     
+		     @AuthenticationPrincipal UserDetails user	     
 	     ) {
 
 		 //バリデーションを表示、必要なmodelに値を追加してindex.htmlに渡す
 		 if(bindingResult.hasErrors()) {
-			 String loginId = getLoginId(loginUser);
+			 String loginId = getLoginId(user);
 				//ページネーション
 			 Pageable pageable = PageRequest.of(
 					 Integer.parseInt(this.session.getAttribute("page").toString()),
@@ -354,7 +355,7 @@ public class TaskController {
 				 );
 		 List<Task> taskList = taskService.searchTasks(
 				 searchItemForm,
-				 getLoginId(loginUser), pageable
+				 getLoginId(user), pageable
 				 );
 		 //nullの場合は、初期化する
 		 if (this.session.getAttribute("searchHistory") == null){
@@ -387,10 +388,10 @@ public class TaskController {
 	 public String searchTasksByHistory(
 	       @RequestParam int historyNumber,
 	       Model model,
-		   Authentication loginUser,
+	       @AuthenticationPrincipal UserDetails user,
 		   RedirectAttributes redirectAttributes
 	    ) {
-		 String loginId = getLoginId(loginUser);
+		 String loginId = getLoginId(user);
 		//ページネーション
 	    Pageable pageable = PageRequest.of(
 			 Integer.parseInt(this.session.getAttribute("page").toString()),

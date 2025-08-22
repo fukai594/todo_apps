@@ -13,10 +13,11 @@ public class TaskForm {
 	// タスクID
 	private int taskId;
 	//空白だけは許可せず、文字が含まれていれば許可する
-	@Pattern(regexp="^(?![\\s　]*$).+", message="スペースのみは入力できません")
+	@Pattern(regexp=".*\\S.*", message="スペースのみは入力できません")
 	@Size(min = 1, max = 100)
     private String title;
 	
+//	@Pattern(regexp="^(?![\\s　]*$).+", message="スペースのみは入力できません")
 	// メッセージは0から2の範囲
 	@Min(value = 0)
 	@Max(value = 2)
@@ -24,7 +25,7 @@ public class TaskForm {
 	
 	// 説明は最大200文字
 
-	@Pattern(regexp="^(?![\\s　]*$).+", message="スペースのみは入力できません")
+	@Pattern(regexp="(^$)|.*\\S.*", message="スペースのみは入力できません")
 	@Size(max = 200)
     private String description;
     

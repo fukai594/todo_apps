@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class Account {
 	private int userNo;
 	private String loginId;
 	private String password;
@@ -11,6 +11,7 @@ public class User {
 	private int failedLoginAttemps;
 	private LocalDateTime lastLogin;
 	private LocalDateTime createdAt;
+	
 	
 	public int getUserNo() {
 		return userNo;
@@ -59,6 +60,10 @@ public class User {
 	}
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+	public Account orElseThrow(Object object) {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 
 }

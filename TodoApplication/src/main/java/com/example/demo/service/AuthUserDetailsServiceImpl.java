@@ -1,4 +1,6 @@
 package com.example.demo.service;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -24,7 +26,6 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 	private final UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
 	public AuthUserDetailsServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	};
@@ -37,6 +38,17 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		if(account == null) {
 			throw new UsernameNotFoundException("");
 		}
+		//もし、ロックされていたらロック解除できるか確認する、初回はログイン認証のイベントが発動していないため0回、
+		//なので失敗回数 + 1とする
+		System.out.print("######################");
+		System.out.print(account.getFailedLoginTime());
+		if(account.getFailedLoginAttemps() + 1>= lockingBoundaries) {
+			if(isunlock(account)) {
+				System.out.print("######################");
+				System.out.print(account.getFailedLoginTime());
+				unlockAccount(account);
+			}
+		}
 		
 		return User.withUsername(account.getLoginId())
 				//パスワード
@@ -45,7 +57,8 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 				.accountLocked(account.getFailedLoginAttemps() >= lockingBoundaries)
 				.build();
 	}
-
+	
+	
 	@Transactional
 	public String register(UserForm userForm) {
 		//変換処理
@@ -62,15 +75,27 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 	@EventListener
 	public void loginFailureHandler(AuthenticationFailureBadCredentialsEvent event) {
 		String loginId = event.getAuthentication().getName();
-		System.out.print("######################");
-		System.out.print(event.getAuthentication().getName());
 		userRepository.incrementLoginFailureCount(loginId);
+		//アカウント失敗時間の追加
 	}
 	//ログイン成功時のハンドラ
 	@EventListener
 	public void loginSuccessHandler(AuthenticationSuccessEvent event) {
 		String loginId = event.getAuthentication().getName();
 		userRepository.resetLoginFailureCount(loginId);
+	}
+	//一定時間を過ぎたらログイン失敗回数と失敗時間をnullにする
+	//ロックを解除するかチェック
+	public boolean isunlock(Account account) {
+		//現在日時 > 最終ログイン失敗時間 + ロック期間（10分）
+		if(LocalDateTime.now().isAfter(account.getFailedLoginTime().plusMinutes(3))) {
+			return true;
+		};
+		return false;
+	}
+	//ロックを解除（失敗回数を0、失敗時間をnullに更新する)
+	public void unlockAccount(Account account) {
+		userRepository.resetLoginFailureCount(account.getLoginId());
 	}
 	@Transactional
 	public String updateLoginId(String loginId, String newLoginId) {
@@ -97,7 +122,6 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		//パスワードをデコードして返却
 		return convertToUserForm(account);
 	}
-	
 	
 	public boolean isExistUser(String loginId) {//存在チェック
 		int count = userRepository.isExistUser(loginId);

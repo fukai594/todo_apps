@@ -11,7 +11,7 @@ public class Account {
 	private int failedLoginAttemps;
 	private LocalDateTime lastLogin;
 	private LocalDateTime createdAt;
-	
+	private LocalDateTime failedLoginTime;
 	
 	public int getUserNo() {
 		return userNo;
@@ -61,9 +61,12 @@ public class Account {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Account orElseThrow(Object object) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	public LocalDateTime getFailedLoginTime() {
+		return failedLoginTime;
 	}
+	public void setFailedLoginTime(LocalDateTime failedLoginTime) {
+		this.failedLoginTime = failedLoginTime;
+	}
+	
 
 }

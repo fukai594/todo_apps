@@ -59,9 +59,9 @@
 	where loginId=#{loginId}
     </update>
     <update id="incrementLoginFailureCount">
-        UPDATE users SET failedloginattemps = failedloginattemps + 1 WHERE loginId = #{loginId};
+        UPDATE users SET failedloginattemps = failedloginattemps + 1, failedlogintime = CURRENT_TIMESTAMP WHERE loginId = #{loginId} ;
     </update>
     <update id="resetLoginFailureCount">
-        UPDATE users SET failedloginattemps = 0 WHERE loginId = #{loginId};
+        UPDATE users SET failedloginattemps = 0, failedlogintime = null WHERE loginId = #{loginId};
     </update>
 </mapper>

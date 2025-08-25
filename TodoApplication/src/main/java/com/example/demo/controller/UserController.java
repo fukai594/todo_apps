@@ -74,7 +74,6 @@ public class UserController {
 			@AuthenticationPrincipal UserDetails loginUser,
 		Model model
 		) {
-		//ログイン中のユーザーを取得
 		String loginId = getLoginId(loginUser);
 		UserForm userForm = userDetailsService.getUser(loginId);
 		model.addAttribute("userForm",userForm);
@@ -86,7 +85,6 @@ public class UserController {
 		UserLoginIdForm userLoginIdForm,
 		Model model
 		) {
-		//ログイン中のユーザーを取得
 		model.addAttribute("userLoginIdForm",userLoginIdForm);
 		return "/editLoginId";
 	}
@@ -96,7 +94,6 @@ public class UserController {
 		UserPasswordForm userPasswordForm,
 		Model model
 		) {
-		//ログイン中のユーザーを取得
 		model.addAttribute("userPasswordForm",userPasswordForm);
 		return "/editPassword";
 	}
@@ -105,7 +102,6 @@ public class UserController {
 		UserNameForm userNameForm,
 		Model model
 		) {
-		//ログイン中のユーザーを取得
 		model.addAttribute("userNameForm",userNameForm);
 		return "/editUserName";
 	}
@@ -119,9 +115,7 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return "/editLoginId";
 		}
-		System.out.println("受信データ");
-		System.out.println("loginId"+ userLoginIdForm.getLoginId());
-		
+
 		model.addAttribute("userLoginForm",userLoginIdForm);
 		return "/loginIdConfirm";
 	}
@@ -154,9 +148,6 @@ public class UserController {
 			return "/editLoginId";
 		}
 		try {
-			//ログイン中のユーザーを取得
-			System.out.println(userLoginIdForm.getLoginId());
-			System.out.println(getLoginId(loginUser));
 			//usersテーブルの更新
 			String completeMessage = userDetailsService.updateLoginId(getLoginId(loginUser), userLoginIdForm.getLoginId());
 			//taskテーブルの更新

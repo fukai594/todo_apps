@@ -38,14 +38,9 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		if(account == null) {
 			throw new UsernameNotFoundException("");
 		}
-		//もし、ロックされていたらロック解除できるか確認する、初回はログイン認証のイベントが発動していないため0回、
-		//なので失敗回数 + 1とする
-		System.out.print("######################");
-		System.out.print(account.getFailedLoginTime());
-		if(account.getFailedLoginAttemps() + 1>= lockingBoundaries) {
+		//もし、ロックされていたらロック解除できるか確認する
+		if(account.getFailedLoginAttemps() == lockingBoundaries) {
 			if(isunlock(account)) {
-				System.out.print("######################");
-				System.out.print(account.getFailedLoginTime());
 				unlockAccount(account);
 			}
 		}
@@ -84,11 +79,11 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 		String loginId = event.getAuthentication().getName();
 		userRepository.resetLoginFailureCount(loginId);
 	}
-	//一定時間を過ぎたらログイン失敗回数と失敗時間をnullにする
+
 	//ロックを解除するかチェック
 	public boolean isunlock(Account account) {
-		//現在日時 > 最終ログイン失敗時間 + ロック期間（10分）
-		if(LocalDateTime.now().isAfter(account.getFailedLoginTime().plusMinutes(3))) {
+		//現在日時 > 最終ログイン失敗時間 + ロック時間（24時間）
+		if(LocalDateTime.now().isAfter(account.getFailedLoginTime().plusHours(24))) {
 			return true;
 		};
 		return false;
@@ -99,9 +94,6 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService{
 	}
 	@Transactional
 	public String updateLoginId(String loginId, String newLoginId) {
-//		Account account = convertToUser(userForm);
-//		String password = account.getPassword();
-//		account.setPassword(passwordEncoder.encode(password));
 		userRepository.updateLoginId(loginId, newLoginId);
 		return Constants.USER_EDIT_COMPLETE;
 	}

@@ -12,10 +12,11 @@
 	        <form th:action="@{/login}" method="post" name="Login_Form"
 	            class="form-signin">
 	            <h2 class="form-signin-heading">ToDo Application</h2>
-				<div th:if="${errorMessage}" class="text-danger">
-				    <p th:text="${errorMessage}"></p>
-					<p th:if="${param.error}">ログインに失敗しました</p>
-				</div>
+<!--				<div th:if="${errorMessage}" class="text-danger">-->
+<!--				    <p th:text="${errorMessage}"></p>-->
+<!--					<p th:if="${param.error}">ログインに失敗しました</p>-->
+<!--				</div>-->
+				<p th:if="${param.error != null and session['SPRING_SECURITY_LAST_EXCEPTION'] != null}" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}" class="text-danger">ログインIDまたはパスワードが間違っています</p>
 				<div class="form-items">
 		            <input type="text" name="username" placeholder="LoginId"/><br>
 		            <input type="password" name="password" placeholder="Password"/><br>

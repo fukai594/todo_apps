@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class Account {
 	private int userNo;
 	private String loginId;
 	private String password;
@@ -11,6 +11,7 @@ public class User {
 	private int failedLoginAttemps;
 	private LocalDateTime lastLogin;
 	private LocalDateTime createdAt;
+	private LocalDateTime failedLoginTime;
 	
 	public int getUserNo() {
 		return userNo;
@@ -60,5 +61,12 @@ public class User {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	public LocalDateTime getFailedLoginTime() {
+		return failedLoginTime;
+	}
+	public void setFailedLoginTime(LocalDateTime failedLoginTime) {
+		this.failedLoginTime = failedLoginTime;
+	}
+	
 
 }

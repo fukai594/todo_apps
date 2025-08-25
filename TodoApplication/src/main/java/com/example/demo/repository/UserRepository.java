@@ -2,7 +2,7 @@ package com.example.demo.repository;
 
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.User;
+import com.example.demo.entity.Account;
 import com.example.demo.mapper.UserMapper;
 
 @Repository
@@ -13,15 +13,15 @@ public class UserRepository {
 		this.userMapper = userMapper;
 	}
 	
-	public User findByLoginId(String loginId) {
+	public Account findByLoginId(String loginId) {
 		return userMapper.findByLoginId(loginId);
 	}
 	
 	public int isExistUser(String loginId) {
 		return userMapper.isExistUser(loginId);
 	}
-	public void register(User user) {
-		userMapper.register(user);
+	public void register(Account account) {
+		userMapper.register(account);
 	}
 	public void updateLoginId(String loginId, String newLoginId) {
 		userMapper.updateLoginId(loginId, newLoginId);
@@ -32,7 +32,13 @@ public class UserRepository {
 	public void updateUserName(String loginId, String userName) {
 		userMapper.updateUserName(loginId, userName);
 	}
-	public User getUser(String loginId) {
+	public Account getUser(String loginId) {
 		return userMapper.getUser(loginId);
+	}
+	public void incrementLoginFailureCount(String loginId) {
+		userMapper.incrementLoginFailureCount(loginId);
+	}
+	public void resetLoginFailureCount(String loginId) {
+		userMapper.resetLoginFailureCount(loginId);
 	}
 }

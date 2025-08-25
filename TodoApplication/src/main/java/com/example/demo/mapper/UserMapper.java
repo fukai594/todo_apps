@@ -2,15 +2,17 @@ package com.example.demo.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.demo.entity.User;
+import com.example.demo.entity.Account;
 
 @Mapper
 public interface UserMapper {
-	User findByLoginId(String loginId);
+	Account findByLoginId(String loginId);
 	int isExistUser(String loginId);
-	void register(User user);
+	void register(Account user);
 	void updateLoginId(String loginId, String newLoginId);
 	void updatePassword(String loginId, String password);
 	void updateUserName(String loginId, String userName);
-	User getUser(String loginId);
+	Account getUser(String loginId);
+	void incrementLoginFailureCount(String loginId);
+	void resetLoginFailureCount(String loginId);
 }

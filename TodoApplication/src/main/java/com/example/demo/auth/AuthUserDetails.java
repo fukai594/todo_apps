@@ -9,28 +9,28 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.demo.entity.User;
+import com.example.demo.entity.Account;
 
 public class AuthUserDetails implements UserDetails{
 
 	//認証するユーザー情報
-	private final User user;
+	private final Account account;
 	private final Collection<? extends GrantedAuthority> authorities;
 	
 	//自作プロパティ
 
 	
-	public AuthUserDetails(User user) {
-		this.user = user;
-		List<String> list = new ArrayList<String>(Arrays.asList(user.getUserName()));
+	public AuthUserDetails(Account account) {
+		this.account = account;
+		List<String> list = new ArrayList<String>(Arrays.asList(account.getUserName()));
 		this.authorities = list
 				.stream()
 				.map(role -> new SimpleGrantedAuthority(role))
 				.toList();
 	}
 
-	public User getUser() {
-		return user;
+	public Account getUser() {
+		return account;
 	}
 	
 	@Override
@@ -44,14 +44,14 @@ public class AuthUserDetails implements UserDetails{
 	public String getPassword() {
 		// TODO 自動生成されたメソッド・スタブ
 		//return null;
-		return user.getPassword();
+		return account.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO 自動生成されたメソッド・スタブ
 		//return null;
-		return user.getUserName();
+		return account.getUserName();
 	}
 	
 

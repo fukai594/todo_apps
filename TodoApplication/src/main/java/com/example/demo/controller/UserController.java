@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.auth.AuthUserDetails;
 import com.example.demo.form.UserForm;
 import com.example.demo.form.UserLoginIdForm;
 import com.example.demo.form.UserNameForm;
@@ -71,7 +71,7 @@ public class UserController {
 	}
 	@GetMapping("/userInfo")
 	public String edit(
-		Authentication loginUser,
+			@AuthenticationPrincipal UserDetails loginUser,
 		Model model
 		) {
 		//ログイン中のユーザーを取得
@@ -135,9 +135,7 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return "/editUserName";
 		}
-		System.out.println("受信データ");
-		System.out.println("ユーザー名"+ userNameForm.getUserName());
-		
+	
 		model.addAttribute("userNameForm",userNameForm);
 		return "/userNameConfirm";
 	}
@@ -146,7 +144,7 @@ public class UserController {
 			@Validated UserLoginIdForm userLoginIdForm,
 			BindingResult bindingResult,
 			Model model,
-			Authentication loginUser
+			@AuthenticationPrincipal UserDetails loginUser
 			) {
 		if(bindingResult.hasErrors()) {
 			return "/editLoginId";
@@ -175,7 +173,7 @@ public class UserController {
 			@Validated UserPasswordForm userPasswordForm,
 			BindingResult bindingResult,
 			Model model,
-			Authentication loginUser
+			@AuthenticationPrincipal UserDetails loginUser
 			) {
 		if(bindingResult.hasErrors()) {
 			return "/editPassword";
@@ -198,7 +196,7 @@ public class UserController {
 			@Validated UserNameForm userNameForm,
 			BindingResult bindingResult,
 			Model model,
-			Authentication loginUser
+			@AuthenticationPrincipal UserDetails loginUser
 			) {
 		if(bindingResult.hasErrors()) {
 			return "/editUserName";
@@ -217,9 +215,8 @@ public class UserController {
 		return "/userComplete";
 	}
 	//ログイン中のユーザー情報を取得
-	private String getLoginId(Authentication loginUser) {
-		AuthUserDetails userDetails = (AuthUserDetails)loginUser.getPrincipal();
-		 return userDetails.getUser().getLoginId();
+	private String getLoginId(UserDetails user) {
+		return user.getUsername();
 	}
 	@GetMapping("/back")
 	public String backToEditPage(
